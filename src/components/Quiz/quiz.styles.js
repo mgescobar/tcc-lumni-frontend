@@ -17,12 +17,12 @@ export const Pontuação = styled.div`
     font-size: 24px;
     justify-content: center;
     align-items: center;
-    color: #03a9f4;
+    color: #01263f;
 `;
 
 export const InfoPerguntas = styled.div`
     width: 100%;
-    color: #03a9f4;
+    color: #01263f;
     position: relative;
 `;
 
@@ -32,12 +32,12 @@ export const ContagemPerguntas = styled.div`
     align-items: baseline;
     margin-bottom: 20px;
     font-size: 28px;
-    color: #03a9f4;
+    color: #01263f;
 `;
 
 export const Pergunta = styled.div`
     margin-bottom: 12px;
-    color: #03a9f4;
+    color: #01263f;
 `;
 
 export const GrupoResposta = styled.div`
@@ -45,7 +45,7 @@ export const GrupoResposta = styled.div`
     flex: 1 1 200px;
     justify-content: center;
     align-items: baseline;
-    color: #03a9f4;
+    color: #01263f;
 `;
 
 export const Resposta = styled.div`
@@ -53,7 +53,7 @@ export const Resposta = styled.div`
     flex-wrap: wrap;
     justify-content: space-between;
     width: 100%;
-    color: #03a9f4; ;
+    color: #01263f; ;
 `;
 
 export const ButtonAnswer = styled.div`
@@ -62,7 +62,7 @@ export const ButtonAnswer = styled.div`
     align-items: center;
     width: 100%;
     font-size: 16px;
-    color: #03a9f4;
+    color: #01263f;
     background-color: #fff;
     border-radius: 8px;
     padding: 8px;

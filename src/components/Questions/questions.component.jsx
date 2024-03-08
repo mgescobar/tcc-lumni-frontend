@@ -19,17 +19,16 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
-import { lightGreen, red } from "@mui/material/colors";
-import { createTheme, responsiveFontSizes } from "@mui/material/styles";
+import {  red } from "@mui/material/colors";
+import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/material/styles";
-import React, { useState, useContext, useEffect, useReducer } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
 import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
@@ -50,9 +49,9 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import Autocomplete from "@mui/material/Autocomplete";
 import Stack from "@mui/material/Stack";
+import Grid from "@mui/material/Grid";
 
 import api from "../../services/api";
-import { Description } from "@mui/icons-material";
 import Categories from "../../api/Categories";
 //Context
 //import { AuthProvider } from "../../contexts/AuthContext";
@@ -81,6 +80,7 @@ const useStyles = makeStyles((theme) => ({
         overflowX: "hidden",
         overflowY: "auto",
         marginLeft: "50%",
+        marginTop: "20px",
         transform: "translateX(-50%)",
         width: 800,
         background: "white",
@@ -211,37 +211,10 @@ TablePaginationActions.propTypes = {
     rowsPerPage: PropTypes.number.isRequired,
 };
 
-function createData(name, calories, fat) {
-    return { name, calories, fat };
-}
-
-/*const rows = [
-  createData("Cupcake", 305, 3.7),
-  createData("Donut", 452, 25.0),
-  createData("Eclair", 262, 16.0),
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Gingerbread", 356, 16.0),
-  createData("Honeycomb", 408, 3.2),
-  createData("Ice cream sandwich", 237, 9.0),
-  createData("Jelly Bean", 375, 0.0),
-  createData("KitKat", 518, 26.0),
-  createData("Lollipop", 392, 0.2),
-  createData("Marshmallow", 318, 0),
-  createData("Nougat", 360, 19.0),
-  createData("Oreo", 437, 18.0),
-].sort((a, b) => (a.calories < b.calories ? -1 : 1));*/
-
 const options = [
-    "Nível 1",
-    "Nível 2",
-    "Nível 3",
-    "Nível 4",
-    "Nível 5",
-    "Nível 6",
-    "Nível 7",
-    "Nível 8",
-    "Nível 9",
-    "Nível 10",
+    "Fácil",
+    "Intermediário",
+    "Difícil"
 ];
 
 export default function QuestionsData() {
@@ -257,30 +230,21 @@ export default function QuestionsData() {
     const [EditId, setEditId] = useState(0);
 
     const [questionTitle, setQuestionTitle] = useState("");
-    const [questionA, setQuestionA] = useState("");
-    const [questionB, setQuestionB] = useState("");
-    const [questionC, setQuestionC] = useState("");
-    const [questionD, setQuestionD] = useState("");
-    const [questionE, setQuestionE] = useState("");
     const [questionCorrect, setQuestionCorrect] = useState("");
     const [questionLevel, setQuestionLevel] = useState("");
     const [category, setCategory] = useState(0);
 
+    const [answers, setAnswers] = useState([
+        { id: '0', label: 'a)', description: '' },
+        { id: '1', label: 'b)', description: '' },
+    ]);
+
+    const [editAnswers, setEditAnswers] = useState([]);
+
     const [EDITquestionTitle, setEDITQuestionTitle] = useState("");
-    const [EDITquestionA, setEDITQuestionA] = useState("");
-    const [EDITquestionB, setEDITQuestionB] = useState("");
-    const [EDITquestionC, setEDITQuestionC] = useState("");
-    const [EDITquestionD, setEDITQuestionD] = useState("");
-    const [EDITquestionE, setEDITQuestionE] = useState("");
     const [EDITquestionCorrect, setEDITQuestionCorrect] = useState("");
     const [EDITquestionLevel, setEDITQuestionLevel] = useState(0);
     const [EDITquestionCategory, setEDITQuestionCategory] = useState(0);
-
-    const [EDITquestionAId, setEDITQuestionAId] = useState(0);
-    const [EDITquestionBId, setEDITQuestionBId] = useState(0);
-    const [EDITquestionCId, setEDITQuestionCId] = useState(0);
-    const [EDITquestionDId, setEDITQuestionDId] = useState(0);
-    const [EDITquestionEId, setEDITQuestionEId] = useState(0);
 
 
     const [questionsDependent, setQuestionsDependent] = useState(false);
@@ -289,7 +253,6 @@ export default function QuestionsData() {
         async function getProblems() {
             const response = await api.get("/findAllProblems");
             const problems = response.data.problems;
-            console.log(problems);
             setRows(problems);
         }
         getProblems();
@@ -298,23 +261,24 @@ export default function QuestionsData() {
     async function getQuestionToEdit(EditId) {
         try {
             const { data } = await api.get(`/findProblem/${EditId}`);
-            console.log(data)
+
+            const answerOptions = [
+                { id: '0', label: 'a)' },
+                { id: '1', label: 'b)' },
+                { id: '2', label: 'c)' },
+                { id: '3', label: 'd)' },
+                { id: '4', label: 'e)' }
+            ]
             
             setEDITQuestionTitle(data.problem.description);
-            setEDITQuestionLevel(data.problem.level - 1);
+            setEDITQuestionLevel(options[data.problem.level - 1]);
             setEDITQuestionCategory(data.problem.theme);
+            setEditAnswers(data.options.map((item, index) => ({
+                id: item.id,
+                label: answerOptions[index].label,
+                description: item.description
+            })));
             
-            setEDITQuestionA(data.options[0].description);
-            setEDITQuestionB(data.options[1].description);
-            setEDITQuestionC(data.options[2].description);
-            setEDITQuestionD(data.options[3].description);
-            setEDITQuestionE(data.options[4].description);
-
-            setEDITQuestionAId(data.options[0].id);
-            setEDITQuestionBId(data.options[1].id);
-            setEDITQuestionCId(data.options[2].id);
-            setEDITQuestionDId(data.options[3].id);
-            setEDITQuestionEId(data.options[4].id);
             setEDITQuestionCorrect(
                 data.options[0].correct === 1
                     ? "0"
@@ -335,37 +299,14 @@ export default function QuestionsData() {
 
     async function handleEditQuestion() {
         try {
-           
             const teste = await api.put(`/problems/${EditId}`, {
                 description: EDITquestionTitle,
-                options: [
-                    {
-                        id: EDITquestionAId,
-                        description: EDITquestionA,
-                        correct: EDITquestionCorrect === "0" ? 1 : 0,
-                    },
-                    {
-                        id: EDITquestionBId,
-                        description: EDITquestionB,
-                        correct: EDITquestionCorrect === "1" ? 1 : 0,
-                    },
-                    {
-                        id: EDITquestionCId,
-                        description: EDITquestionC,
-                        correct: EDITquestionCorrect === "2" ? 1 : 0,
-                    },
-                    {
-                        id: EDITquestionDId,
-                        description: EDITquestionD,
-                        correct: EDITquestionCorrect === "3" ? 1 : 0,
-                    },
-                    {
-                        id: EDITquestionEId,
-                        description: EDITquestionE,
-                        correct: EDITquestionCorrect === "4" ? 1 : 0,
-                    },
-                ],
-                level: EDITquestionLevel + 1,
+                options: editAnswers.map((answer, index) => ({
+                    id: answer.id,
+                    description: answer.description,
+                    correct: EDITquestionCorrect === index.toString() ? 1 : 0,
+                })),
+                level: options.indexOf(EDITquestionLevel) + 1,
                 theme: EDITquestionCategory 
             });
             setOpenEdit(false);
@@ -407,28 +348,10 @@ export default function QuestionsData() {
                 problems: [
                     {
                         description: questionTitle,
-                        options: [
-                            {
-                                description: questionA,
-                                correct: questionCorrect === "0" ? 1 : 0,
-                            },
-                            {
-                                description: questionB,
-                                correct: questionCorrect === "1" ? 1 : 0,
-                            },
-                            {
-                                description: questionC,
-                                correct: questionCorrect === "2" ? 1 : 0,
-                            },
-                            {
-                                description: questionD,
-                                correct: questionCorrect === "3" ? 1 : 0,
-                            },
-                            {
-                                description: questionE,
-                                correct: questionCorrect === "4" ? 1 : 0,
-                            },
-                        ],
+                        options: answers.map((answer, index) => ({
+                            description: answer.description,
+                            correct: questionCorrect === index.toString() ? 1 : 0,
+                        })),
                         level: questionLevel + 1,
                         tips: "teste",
                         theme: category
@@ -441,6 +364,11 @@ export default function QuestionsData() {
                 ? setQuestionsDependent(false)
                 : setQuestionsDependent(true);
             console.log("Questão cadastrada com sucesso");
+
+            setAnswers([
+                { id: '0', label: 'a)', description: '' },
+                { id: '1', label: 'b)', description: '' },
+            ]);
         } catch (err) {
             console.log(err);
         }
@@ -487,26 +415,6 @@ export default function QuestionsData() {
     const handleCloseRemove = () => {
         setOpenRemove(false);
     };
-
-    // const handleOpenRemove = (name) => {
-    //     setOpenRemove(true);
-    //     setCurrent(name);
-    // };
-
-    // const handleCloseRemove = () => {
-    //     setOpenRemove(false);
-    // };
-
-    // const handleOpenEdit = (name, value) => {
-    //     setOpenEdit(true);
-    //     setCurrentFertilizerName(name);
-    //     setCurrentFertilizerValue(value);
-    // };
-
-    // const handleCloseEdit = () => {
-    //     setOpenEdit(false);
-    // };
-
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -520,6 +428,44 @@ export default function QuestionsData() {
         setPage(0);
     };
 
+    // aqui
+    const answerOptions = [
+        { id: '0', label: 'a)' },
+        { id: '1', label: 'b)' },
+        { id: '2', label: 'c)' },
+        { id: '3', label: 'd)' },
+        { id: '4', label: 'e)' }
+    ]
+
+    const handleAnswerChange = (id, description) => {
+        setAnswers((prevAnswers) =>
+        prevAnswers.map((answer) =>
+            answer.id === id ? { ...answer, description } : answer
+        )
+        );
+    };
+
+    const handleAddAnswer = () => {
+        setAnswers((prevAnswers) => [
+          ...prevAnswers,
+          { id: `${prevAnswers.length}`, label: answerOptions[prevAnswers.length].label, description: '' },
+        ]);
+    };
+
+    const handleRemoveAnswer = (id) => {
+        setAnswers((prevAnswers) =>
+        prevAnswers.filter((answer) => answer.id !== id)
+        );
+    };
+
+    const handleEditAnswerChange = (id, description) => {
+        setEditAnswers((prevAnswers) =>
+        prevAnswers.map((answer) =>
+            answer.id === id ? { ...answer, description } : answer
+        )
+        );
+    };
+
     const body = (
         <div className={classes.paperModal}>
             <Typography
@@ -531,7 +477,7 @@ export default function QuestionsData() {
                     fontFamily: "monospace",
                     fontWeight: 700,
                     justifyContent: "center",
-                    color: " #03a9f4",
+                    color: " #01263f",
                     textDecoration: "none",
                 }}
             >
@@ -546,7 +492,7 @@ export default function QuestionsData() {
                         id="new-question"
                         className={classes.textControl}
                         label="Pergunta"
-                        style={{ margin: 8 }}
+                        style={{ margin: 8}}
                         placeholder="Informe aqui"
                         margin="normal"
                         type="text"
@@ -557,7 +503,25 @@ export default function QuestionsData() {
                     />
                 </Question>
                 <Level>
-                    <Stack spacing={1} sx={{ width: 300 }}>
+                    <Stack spacing={1} sx={{ width: 300, marginTop: 5 }}>
+                        <Autocomplete
+                            options={options}
+                            id="disable-close-on-select"
+                            onChange={(event, newValue) => {
+                                setQuestionLevel(options.indexOf(newValue));
+                            }}
+                            //value={options[questionLevel]} usar no edit
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Nível da Questão"
+                                    variant="standard"
+                                />
+                            )}
+                        />
+                    </Stack>
+
+                    <Stack spacing={1} sx={{ width: 300, marginTop: 5 }}>
                         <TextField
                             select
                             label="Selecione a categoria"
@@ -573,143 +537,82 @@ export default function QuestionsData() {
                             ))}
                         </TextField>
                     </Stack>
-
-                    <Stack spacing={1} sx={{ width: 300 }}>
-                        <Autocomplete
-                            //{...defaultProps}
-                            options={options}
-                            id="disable-close-on-select"
-                            disableCloseOnSelect
-                            onChange={(event, newValue) => {
-                                setQuestionLevel(options.indexOf(newValue));
-                            }}
-                            //value={options[questionLevel]} usar no edit
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Nível da Questão"
-                                    variant="standard"
-                                />
-                            )}
-                        />
-                    </Stack>
                 </Level>
-                <Answers>
-                    <FormControl>
-                        <FormLabel
-                            className={classes.textControl}
-                            id="demo-controlled-radio-buttons-group"
+                
+                <FormControl style={{ width: "150%" }}>
+                <Grid container alignItems="center" justifyContent="center" spacing={2}
+                    style={{ marginBottom: "20px", marginTop: "5px", alignItems: "center", justifyContent: "center" }}
+                >
+                    <Grid item>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleAddAnswer}
+                            disabled={answers.length >= 5}
                         >
-                            6 Respostas
-                        </FormLabel>
-                        <RadioGroup
-                            aria-labelledby="demo-controlled-radio-buttons-group"
-                            name="controlled-radio-buttons-group"
-                            value={questionCorrect}
-                            onChange={(event) =>
-                                setQuestionCorrect(event.target.value)
-                            }
+                            Adicionar alternativa
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button
+                            variant="contained"
+                            color="error"
+                            disabled={answers.length === 2}
+                            onClick={() => handleRemoveAnswer(answers[answers.length - 1].id)}
                         >
-                            {questionCorrect}
-                            <FormControlLabel
-                                value="0"
-                                control={<Radio />}
-                                label="a)"
-                                //checked = {questionCorrect === "0" ? true : false} vai ir no edit question
-                            />
-                            <TextField
-                                id="questionA"
-                                variant="outlined"
-                                multiline={true}
-                                size="small"
-                                className={classes.textControl}
-                                style={{ margin: 8 }}
-                                margin="normal"
-                                type="text"
-                                value={questionA}
-                                onChange={(event) =>
-                                    setQuestionA(event.target.value)
-                                }
-                            />
-                            <FormControlLabel
-                                value="1"
-                                control={<Radio />}
-                                label="b)"
-                            />
-                            <TextField
-                                id="questionB"
-                                variant="outlined"
-                                multiline={true}
-                                size="small"
-                                className={classes.textControl}
-                                style={{ margin: 8 }}
-                                margin="normal"
-                                type="text"
-                                value={questionB}
-                                onChange={(event) =>
-                                    setQuestionB(event.target.value)
-                                }
-                            />
-                            <FormControlLabel
-                                value="2"
-                                control={<Radio />}
-                                label="c)"
-                            />
-                            <TextField
-                                id="questionC"
-                                variant="outlined"
-                                multiline={true}
-                                size="small"
-                                className={classes.textControl}
-                                style={{ margin: 8 }}
-                                margin="normal"
-                                type="text"
-                                value={questionC}
-                                onChange={(event) =>
-                                    setQuestionC(event.target.value)
-                                }
-                            />
-                            <FormControlLabel
-                                value="3"
-                                control={<Radio />}
-                                label="d)"
-                            />
-                            <TextField
-                                id="questionD"
-                                variant="outlined"
-                                multiline={true}
-                                size="small"
-                                className={classes.textControl}
-                                style={{ margin: 8 }}
-                                margin="normal"
-                                type="text"
-                                value={questionD}
-                                onChange={(event) =>
-                                    setQuestionD(event.target.value)
-                                }
-                            />
-                            <FormControlLabel
-                                value="4"
-                                control={<Radio />}
-                                label="e)"
-                            />
-                            <TextField
-                                id="questionE"
-                                variant="outlined"
-                                multiline={true}
-                                size="small"
-                                className={classes.textControl}
-                                style={{ margin: 8 }}
-                                margin="normal"
-                                type="text"
-                                value={questionE}
-                                onChange={(event) =>
-                                    setQuestionE(event.target.value)
-                                }
-                            />
-                        </RadioGroup>
-                    </FormControl>
-                </Answers>
+                            Remover alternativa
+                        </Button>
+                    </Grid>
+                </Grid>
+                
+                <FormLabel
+                    className={classes.textControl}
+                    id="demo-controlled-radio-buttons-group"
+                    style={{ 
+                        textAlign: "center", 
+                        fontWeight: "bold", 
+                        color: "black", 
+                        fontSize: "20px",
+                    }}
+                >
+                    {answers.length} Alternativas
+                </FormLabel>
+
+                <RadioGroup
+                    aria-labelledby="demo-controlled-radio-buttons-group"
+                    name="controlled-radio-buttons-group"
+                    value={questionCorrect}
+                    onChange={(event) => setQuestionCorrect(event.target.value)}
+                >
+                    <Grid container spacing={2}>
+                        {answers.map((answer) => (
+                            <Grid item xs={12} md={12} style={{ display: "flex" }} key={answer.id}>
+                                <FormControlLabel
+                                    value={answer.id}
+                                    control={<Radio />}
+                                    label={answer.label}
+                                />
+
+                                <TextField
+                                    id={`question${answer.label}`}
+                                    variant="outlined"
+                                    multiline
+                                    size="small"
+                                    className={classes.textControl}
+                                    style={{ width: "100%", maxWidth: "1200px", margin: 8, minWidth: "400px" }}
+                                    margin="normal"
+                                    type="text"
+                                    value={answer.text}
+                                    onChange={(event) =>
+                                        handleAnswerChange(answer.id, event.target.value)
+                                    }
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
+                </RadioGroup>
+            </FormControl>
+
                 <AddIconModal>
                     <ThemeProvider theme={theme}>
                         <Button
@@ -717,8 +620,9 @@ export default function QuestionsData() {
                             color={"primary"}
                             className={classes.buttonModal}
                             onClick={handleNewQuestion}
+                            style={{ marginTop: "40px", marginBottom: "10px" }}
                         >
-                            Adicionar
+                            Salvar Pergunta
                             {<AddIcon />}
                         </Button>
                     </ThemeProvider>
@@ -738,7 +642,7 @@ export default function QuestionsData() {
                     fontFamily: "monospace",
                     fontWeight: 700,
                     justifyContent: "center",
-                    color: " #03a9f4",
+                    color: " #01263f",
                     textDecoration: "none",
                 }}
             >
@@ -753,7 +657,7 @@ export default function QuestionsData() {
                         id="new-question"
                         className={classes.textControl}
                         label="Pergunta"
-                        style={{ margin: 8 }}
+                        style={{ margin: 8}}
                         placeholder="Informe aqui"
                         margin="normal"
                         type="text"
@@ -764,16 +668,30 @@ export default function QuestionsData() {
                     />
                 </Question>
                 <Level>
-                    <Stack spacing={1} sx={{ width: 300 }}>
+                    <Stack spacing={1} sx={{ width: 300, marginTop: 5 }}>
+                        <Autocomplete
+                            options={options}
+                            id="disable-close-on-select"
+                            onChange={(event, newValue) => {
+                                setEDITQuestionLevel(newValue);
+                            }}
+                            value={EDITquestionLevel}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Nível da Questão"
+                                    variant="standard"
+                                />
+                            )}
+                        />
+                    </Stack>
+
+                    <Stack spacing={1} sx={{ width: 300, marginTop: 5 }}>
                         <TextField
                             select
                             label="Selecione a categoria"
                             value={EDITquestionCategory}
-                            onChange={(event, newValue) => {
-                                setEDITQuestionCategory(
-                                    event.target.value
-                                );
-                            }}
+                            onChange={(e) => setEDITQuestionCategory(e.target.value)}
                             variant="outlined"
                             style={{ marginBottom: 30, width: "100%" }}
                         >
@@ -784,140 +702,60 @@ export default function QuestionsData() {
                             ))}
                         </TextField>
                     </Stack>
-                    <Stack spacing={1} sx={{ width: 300 }}>
-                        <Autocomplete
-                            //{...defaultProps}
-                            options={options}
-                            id="disable-close-on-select"
-                            disableCloseOnSelect
-                            onChange={(event, newValue) => {
-                                setEDITQuestionLevel(options.indexOf(newValue));
-                            }}
-                            value={options[EDITquestionLevel]}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Nível da Questão"
-                                    variant="standard"
-                                />
-                            )}
-                        />
-                    </Stack>
                 </Level>
-                <Answers>
-                    <FormControl>
-                        <FormLabel
-                            className={classes.textControl}
-                            id="demo-controlled-radio-buttons-group"
-                        >
-                            6 Respostas
-                        </FormLabel>
-                        <RadioGroup
-                            aria-labelledby="demo-controlled-radio-buttons-group"
-                            name="controlled-radio-buttons-group"
-                            value={EDITquestionCorrect}
-                            onChange={(event) =>
-                                setEDITQuestionCorrect(event.target.value)
-                            }
-                        >
-                            <FormControlLabel
-                                value="0"
-                                control={<Radio />}
-                                label="a)"
-                            />
-                            <TextField
-                                id="questionA"
-                                variant="outlined"
-                                multiline={true}
-                                size="small"
-                                className={classes.textControl}
-                                style={{ margin: 8 }}
-                                margin="normal"
-                                type="text"
-                                value={EDITquestionA}
-                                onChange={(event) =>
-                                    setEDITQuestionA(event.target.value)
-                                }
-                            />
-                            <FormControlLabel
-                                value="1"
-                                control={<Radio />}
-                                label="b)"
-                            />
-                            <TextField
-                                id="questionB"
-                                variant="outlined"
-                                multiline={true}
-                                size="small"
-                                className={classes.textControl}
-                                style={{ margin: 8 }}
-                                margin="normal"
-                                type="text"
-                                value={EDITquestionB}
-                                onChange={(event) =>
-                                    setEDITQuestionB(event.target.value)
-                                }
-                            />
-                            <FormControlLabel
-                                value="2"
-                                control={<Radio />}
-                                label="c)"
-                            />
-                            <TextField
-                                id="questionC"
-                                variant="outlined"
-                                multiline={true}
-                                size="small"
-                                className={classes.textControl}
-                                style={{ margin: 8 }}
-                                margin="normal"
-                                type="text"
-                                value={EDITquestionC}
-                                onChange={(event) =>
-                                    setEDITQuestionC(event.target.value)
-                                }
-                            />
-                            <FormControlLabel
-                                value="3"
-                                control={<Radio />}
-                                label="d)"
-                            />
-                            <TextField
-                                id="questionD"
-                                variant="outlined"
-                                multiline={true}
-                                size="small"
-                                className={classes.textControl}
-                                style={{ margin: 8 }}
-                                margin="normal"
-                                type="text"
-                                value={EDITquestionD}
-                                onChange={(event) =>
-                                    setEDITQuestionD(event.target.value)
-                                }
-                            />
-                            <FormControlLabel
-                                value="4"
-                                control={<Radio />}
-                                label="e)"
-                            />
-                            <TextField
-                                id="questionE"
-                                variant="outlined"
-                                multiline={true}
-                                size="small"
-                                className={classes.textControl}
-                                style={{ margin: 8 }}
-                                margin="normal"
-                                type="text"
-                                value={EDITquestionE}
-                                onChange={(event) =>
-                                    setEDITQuestionE(event.target.value)
-                                }
-                            />
-                        </RadioGroup>
-                    </FormControl>
-                </Answers>
+                
+                <FormControl style={{ width: "150%" }}>
+                
+                <FormLabel
+                    className={classes.textControl}
+                    id="demo-controlled-radio-buttons-group"
+                    style={{ 
+                        textAlign: "center", 
+                        fontWeight: "bold", 
+                        color: "black", 
+                        fontSize: "20px",
+                    }}
+                >
+                    {editAnswers.length} Alternativas
+                </FormLabel>
+
+                <RadioGroup
+                    aria-labelledby="demo-controlled-radio-buttons-group"
+                    name="controlled-radio-buttons-group"
+                    value={EDITquestionCorrect}
+                    onChange={(event) => {
+                        setEDITQuestionCorrect(event.target.value)
+                    }}
+                >
+                    <Grid container spacing={2}>
+                        {editAnswers.map((answer, index) => (
+                            <Grid item xs={12} md={12} style={{ display: "flex" }} key={answer.id}>
+                                <FormControlLabel
+                                    value={index}
+                                    control={<Radio />}
+                                    label={answer.label}
+                                />
+
+                                <TextField
+                                    id={`question${answer.label}`}
+                                    variant="outlined"
+                                    multiline
+                                    size="small"
+                                    className={classes.textControl}
+                                    style={{ width: "100%", maxWidth: "1200px", margin: 8, minWidth: "400px" }}
+                                    margin="normal"
+                                    type="text"
+                                    value={answer.description}
+                                    onChange={(event) => {
+                                        handleEditAnswerChange(answer.id, event.target.value)
+                                    }}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
+                </RadioGroup>
+            </FormControl>
+
                 <AddIconModal>
                     <ThemeProvider theme={theme}>
                         <Button
@@ -925,8 +763,9 @@ export default function QuestionsData() {
                             color={"primary"}
                             className={classes.buttonModal}
                             onClick={handleEditQuestion}
+                            style={{ marginTop: "40px", marginBottom: "10px" }}
                         >
-                            Editar
+                            Editar Pergunta
                             {<AddIcon />}
                         </Button>
                     </ThemeProvider>
@@ -946,7 +785,7 @@ export default function QuestionsData() {
                     fontFamily: "monospace",
                     fontWeight: 700,
                     justifyContent: "center",
-                    color: " #03a9f4",
+                    color: " #01263f",
                     textDecoration: "none",
                 }}
             >

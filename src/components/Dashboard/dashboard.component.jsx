@@ -189,7 +189,6 @@ export default function DashboardData() {
             const id = JSON.parse(localStorage.getItem("user")).id;  
             const player = await api.get(`/findUser/${id}`);
             const { data } = await api.get(`/answersByPlayer/${player.data.player[0].id}`);
-            console.log(data)
             setPlayerData(data);
         }
         data()

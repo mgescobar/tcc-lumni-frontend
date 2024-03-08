@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
         flex: 1,
     },
     login: {
-        background: "#03a9f4",
+        background: "#01263f",
         color: "white",
         border: "none",
         borderRadius: "10px",
@@ -63,16 +63,6 @@ const useStyles = makeStyles((theme) => ({
         fontSize: "16px",
     },
 }));
-
-async function teste_backend() {
-    try {
-        const response = await api.get("/");
-        console.log(response.data);
-    } catch (error) {
-        console.log(error);
-    }
-}
-teste_backend();
 
 export default function SignIn() {
     const { authenticated, login, logout } = useContext(AuthContext);
@@ -110,7 +100,7 @@ export default function SignIn() {
                                         display: { xs: "none", md: "flex" },
                                         fontWeight: 700,
                                         justifyContent: "center",
-                                        color: " #03a9f4",
+                                        color: " #01263f",
                                         textDecoration: "none",
                                     }}
                                     //onClick={handleSubmitRegister}
@@ -133,7 +123,7 @@ export default function SignIn() {
                                     fontWeight: 700,
                                     justifyContent: "center",
                                     letterSpacing: ".3rem",
-                                    color: " #03a9f4",
+                                    color: " #01263f",
                                     textDecoration: "none",
                                 }}
                             >

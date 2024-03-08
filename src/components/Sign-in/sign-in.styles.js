@@ -5,7 +5,7 @@ export const AllPage = styled.div`
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: #03a9f4;
+    background: #01263f;
     transition: 0.5s;
 `;
 

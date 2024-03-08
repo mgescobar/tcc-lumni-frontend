@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect, useContext } from "react";    
 /* Material UI */
 import makeStyles from "@mui/styles/makeStyles";
 import List from "@mui/material/List";
@@ -11,18 +12,13 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import { NavLink } from "react-router-dom";
-import { useContext } from "react";
 import { AuthContext } from "../../context/auth";
+import api from "../../services/api";
 
 import mascote from "./mascote.png";
-
-const pages = ["Perguntas", "Pricing", "Blog"];
 
 const useStyles = makeStyles((theme) => ({
     forgotPasswordButton: {
@@ -62,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
         fontSize: "16px",
         fontWeight: 400,
         padding: "10px",
-        color: " #03a9f4",
+        color: "#01263f",
         textDecoration: "none",
         fontFamily: "Roboto",
     },
@@ -88,10 +84,20 @@ const ResponsiveAppBar = () => {
         setAnchorElUser(null);
     };
 
-    const { authenticated, login, logout } = useContext(AuthContext);
+    const { logout } = useContext(AuthContext);
+    const [playerData, setPlayerData] = useState({});
+
+    useEffect(() => {
+        async function data () {        
+            const id = JSON.parse(localStorage.getItem("user")).id;  
+            const player = await api.get(`/findUser/${id}`);
+            setPlayerData(player.data);
+        }
+        data()
+    }, []);
 
     return (
-        <AppBar position="static">
+        <AppBar position="static" sx={{ background: "#01263f" }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <Typography
@@ -156,14 +162,17 @@ const ResponsiveAppBar = () => {
                                             Dashboard
                                         </ListItemButton>
                                     </NavLink>
-                                    <NavLink
-                                        className={classes.letterMenu1}
-                                        to="/Questions"
-                                    >
-                                        <ListItemButton>
-                                            Perguntas
-                                        </ListItemButton>
-                                    </NavLink>
+                                    playerData.user.type !== 3 ?
+                                        <NavLink
+                                            className={classes.letterMenu1}
+                                            to="/Questions"
+                                        >
+                                            <ListItemButton>
+                                                Perguntas
+                                            </ListItemButton>
+                                        </NavLink>
+                                        :
+                                        null
                                     <NavLink
                                         className={classes.letterMenu1}
                                         to="/Filter"
@@ -206,12 +215,14 @@ const ResponsiveAppBar = () => {
                             >
                                 <ListItemButton>Dashboard</ListItemButton>
                             </NavLink>
-                            <NavLink
+                            {playerData && playerData.user?.type !== 3 ? (
+                                <NavLink
                                 className={classes.letterMenu}
                                 to="/Questions"
                             >
                                 <ListItemButton>Perguntas</ListItemButton>
                             </NavLink>
+                            ) : null }
                             {/* <NavLink className={classes.letterMenu} to="/Quiz">
                                 <ListItemButton>Quiz</ListItemButton>
                             </NavLink> */}
@@ -223,8 +234,17 @@ const ResponsiveAppBar = () => {
                             </NavLink>
                         </List>
                     </Box>
+                    
+                    {playerData && playerData.user?.type === 1 ? (
+                            <h3>Admnistrador: {playerData.user?.name}</h3>
+                            ) : playerData && playerData.user?.type === 2 ? (
+                            <h3>Professor: {playerData.user?.name}</h3>
+                            ) : playerData && playerData.user?.type === 3 ? (
+                            <h3>Aluno: {playerData.user?.name}</h3>
+                            ) : null 
+                    }
 
-                    <Box sx={{ flexGrow: 0 }}>
+                    <Box sx={{ flexGrow: 0, marginLeft: '20px' }}>
                         <Tooltip title="Abrir configurações">
                             <IconButton
                                 onClick={handleOpenUserMenu}
@@ -242,7 +262,7 @@ const ResponsiveAppBar = () => {
                                 display: { xs: "none", md: "flex" },
                                 fontWeight: 700,
                                 justifyContent: "center",
-                                color: " #03a9f4",
+                                color: "#01263f",
                                 textDecoration: "none",
                             }}
                             id="menu-appbar"
@@ -259,7 +279,19 @@ const ResponsiveAppBar = () => {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-                            <button onClick={() => logout()}>Logout</button>
+                            <button 
+                                style={{
+                                    border: 'none', 
+                                    backgroundColor: 'transparent',
+                                    padding: '10px 10px',
+                                    color: '#01263f',
+                                    cursor: 'pointer',
+                                    fontWeight: 700
+                                }} 
+                                onClick={() => logout()}
+                            >
+                                Sair da plataforma
+                            </button>
                         </Menu>
                     </Box>
                 </Toolbar>

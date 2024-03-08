@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
         flex: 1,
     },
     login: {
-        backgroundColor: " #03a9f4",
+        backgroundColor: " #01263f",
         color: "white",
         border: "none",
         borderRadius: "10px",
@@ -89,7 +89,7 @@ export default function Register() {
                                         fontWeight: 700,
                                         justifyContent: "center",
                                         letterSpacing: ".3rem",
-                                        color: " #03a9f4",
+                                        color: " #01263f",
                                         textDecoration: "none",
                                     }}
                                 >
