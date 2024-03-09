@@ -165,6 +165,7 @@ export default function DashboardData() {
     const [grafico,setgrafico] = useState([])
     const [totalQuestions, setTotalQuestions] = useState(0);
     const [playerData, setPlayerData] = useState({});
+    const [playerLvlAndRank, setPlayerLvlAndRank] = useState(null);
 
 
     useEffect(() => {
@@ -186,10 +187,14 @@ export default function DashboardData() {
 
     useEffect(() => {
         async function data () {        
-            const id = JSON.parse(localStorage.getItem("user")).id;  
+            const id = JSON.parse(localStorage.getItem("user")).id;
             const player = await api.get(`/findUser/${id}`);
-            const { data } = await api.get(`/answersByPlayer/${player.data.player[0].id}`);
-            setPlayerData(data);
+            if(player.data.player[0]?.id !== undefined){
+                const playerLvlAndRank = await api.get(`/findPlayer/${player.data.player[0]?.id}`);
+                const { data } = await api.get(`/answersByPlayer/${player.data.player[0].id}`);
+                setPlayerData(data);
+                setPlayerLvlAndRank(playerLvlAndRank.data.player);
+            }
         }
         data()
     }, []);
@@ -245,17 +250,22 @@ export default function DashboardData() {
                             </Chart>
                         </InsideColumnChart>
                     </Column1>
-                    <Column2>
-                        <Character>
-                            { playerData.score >= 80 ? (
-                                <TagFacesIcon/>
-                            ) : playerData.score <= 79 && playerData.score >=50 ? (
-                                <SentimentVeryDissatisfiedIcon />
-                            ) : playerData.score <=49 ? ( <FaceIcon/>) : null
-                            }
-                        </Character>
-                        <Chart2>Seu nível de jogador é {playerData.player_level}</Chart2>
-                    </Column2>
+                    {playerLvlAndRank !== null ? (
+                        <Column2>
+                            <Character>
+                                { playerData.score >= 80 ? (
+                                    <TagFacesIcon/>
+                                ) : playerData.score <= 79 && playerData.score >=50 ? (
+                                    <SentimentVeryDissatisfiedIcon />
+                                ) : playerData.score <=49 ? ( <FaceIcon/>) : null
+                                }
+                            </Character>
+                            <Chart2>
+                                Seu nível de jogador é <strong>{playerLvlAndRank.player_level}</strong>
+                                <br></br><br></br>Seu rank é <strong>{playerLvlAndRank.player_rank}</strong>   
+                            </Chart2>
+                        </Column2>
+                    ) : null}
                 </ContainerRow>
             </Container>
         </>

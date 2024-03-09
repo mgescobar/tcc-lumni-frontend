@@ -59,11 +59,10 @@ export const Character = styled.div`
 `;
 
 export const Chart2 = styled.div`
-    display: grid;
-    grid-area: chart2;
     align-items: center;
     justify-items: center;
     padding-top: 14px;
+    margin-left: 50px;
     @media screen and (max-width: 860px) {
         height: 80px;
         border-bottom: 1px solid #e0e0e0;
