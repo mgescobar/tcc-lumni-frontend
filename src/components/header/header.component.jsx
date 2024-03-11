@@ -232,6 +232,13 @@ const ResponsiveAppBar = () => {
                             >
                                 <ListItemButton>Quiz</ListItemButton>
                             </NavLink>
+                            
+                            <NavLink
+                                className={classes.letterMenu}
+                                to="/Highscore"
+                            >
+                                <ListItemButton>Placar</ListItemButton>
+                            </NavLink>
                         </List>
                     </Box>
                     

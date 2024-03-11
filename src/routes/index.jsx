@@ -7,6 +7,7 @@ import { Dashboard } from "../pages/dashboard/dashboard.component";
 import { Questions } from "../pages/questions/questions.component";
 import { Quiz } from "../pages/quiz/quiz.component";
 import { Filter } from "../pages/filterQuiz/filterQuiz.component";
+import { Highscore } from "../pages/highscore/highscore.component";
 import { Users } from "../pages/users/users.component";
 import { AuthProvider, AuthContext } from "../context/auth";
 import { RegisterPage } from "../pages/register/register.component";
@@ -69,6 +70,15 @@ const RoutesFunction = () => {
                     element={
                         <Private>
                             <Filter />
+                        </Private>
+                    }
+                />
+
+                <Route
+                    path="/highscore"
+                    element={
+                        <Private>
+                            <Highscore />
                         </Private>
                     }
                 />
