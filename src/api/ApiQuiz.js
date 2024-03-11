@@ -3,7 +3,6 @@ import api from "../services/api";
 export async function findperguntas() {
     try {
         const response = await api.get(`/randomProblem/${1}`);
-        //console.log(response.data);
 
         const teste = [
             {

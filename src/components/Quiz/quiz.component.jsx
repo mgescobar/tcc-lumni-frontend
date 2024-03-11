@@ -139,7 +139,6 @@ function QuizData() {
                 player_id: playerID,
                 problem_id: ArmazenaRespondida[0].pergunta,
             })
-            console.log("enviou resposta")
         } catch (err) {
             console.log(err);
         }

@@ -19,10 +19,8 @@ export const AuthProvider = ({children}) => {
 
 
   const login = async (email, password) => {
-    console.log(email, password);
-
-    const response =  await api.post("/login", {email, password})
-    console.log(response);
+    let response;
+    response = await api.post("/login", {email, password});
 
     const user = response.data.user;
     const token = response.data.token
@@ -36,8 +34,6 @@ export const AuthProvider = ({children}) => {
   };
 
   const logout = () => {
-    
-    console.log("logout");
     setUser(null);
     api.defaults.headers.Authorization = null;
     localStorage.removeItem("user");

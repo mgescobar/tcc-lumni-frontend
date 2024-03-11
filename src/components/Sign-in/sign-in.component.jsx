@@ -26,6 +26,7 @@ import { AuthContext } from "../../context/auth";
 
 import api from "../../services/api";
 import { NavLink } from "react-router-dom";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
     field: {
@@ -66,6 +67,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
     const { authenticated, login, logout } = useContext(AuthContext);
+    const [ hasAuthError, setHasAuthError ] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -74,8 +76,29 @@ export default function SignIn() {
     const handleSubmit = (event) => {
         event.preventDefault();
         //console.log(email, password);
-        login(email, password);
+        // check if login and password are not null or empty strings
+        if (!email || !password) {
+            setHasAuthError("Por favor, preencha todos os campos");
+            return;
+        }
+        login(email, password).catch((error) => {
+            console.log(error);
+            if(error.response.data.errors[0].message === "E_INVALID_AUTH_PASSWORD: Password mis-match") {
+                setHasAuthError("Email ou senha inválidos");
+            } else if(error.response.data.errors[0].message === "E_INVALID_AUTH_UID: User not found") {
+                setHasAuthError("Email ou senha inválidos");
+            }
+        });
+
     };
+
+    useEffect(() => {
+        if(hasAuthError) {
+            setTimeout(() => {
+                setHasAuthError("");
+            }, 3000);
+        }
+    }, [hasAuthError]);
 
     const togglePassword = () => {
         setShowPassword(!showPassword);
@@ -174,6 +197,19 @@ export default function SignIn() {
                             >
                                 Entrar
                             </Button>
+                            {hasAuthError ?
+                                <span 
+                                    style={{
+                                        color: "red",
+                                        fontWeight: "bold",
+                                        display: "block",
+                                        textAlign: "center",
+                                        marginTop: 20
+                                    }}
+                                >
+                                    {hasAuthError}
+                                </span>
+                            : null}
                             <BoxSignUp2>
                                 <NavLink
                                     className={classes.signUp}

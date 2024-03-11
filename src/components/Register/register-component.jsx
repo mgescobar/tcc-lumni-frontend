@@ -56,8 +56,6 @@ export default function Register() {
     const handleSubmit = async (event) => {
         navigate("/");
         try {
-            console.log("teste");
-            console.log(name, email, password);
             event.preventDefault();
             const data = await api.post("/users", {
                 email: email,
@@ -65,7 +63,6 @@ export default function Register() {
                 name: name,
                 type: 3,
             });
-            console.log(data);
         } catch (error) {
             console.log(error);
         }

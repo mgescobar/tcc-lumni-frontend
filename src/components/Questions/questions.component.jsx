@@ -321,7 +321,6 @@ export default function QuestionsData() {
 
     async function handleRemoveQuestion() {
         try {
-            console.log("Removendo questão");
             const teste = await api.delete(`/problems/${RemoveId}`);
             setOpenRemove(false);
             questionsDependent
@@ -363,7 +362,6 @@ export default function QuestionsData() {
             questionsDependent
                 ? setQuestionsDependent(false)
                 : setQuestionsDependent(true);
-            console.log("Questão cadastrada com sucesso");
 
             setAnswers([
                 { id: '0', label: 'a)', description: '' },
