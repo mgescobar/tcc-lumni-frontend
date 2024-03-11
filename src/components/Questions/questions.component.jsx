@@ -886,9 +886,10 @@ export default function QuestionsData() {
                                 25,
                                 { label: "All", value: -1 },
                             ]}
-                            colSpan={3}
+                            colSpan={5}
                             count={rows.length}
                             rowsPerPage={rowsPerPage}
+                            labelRowsPerPage="Linhas por página:"
                             page={page}
                             SelectProps={{
                                 inputProps: {

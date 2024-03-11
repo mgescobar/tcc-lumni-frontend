@@ -201,6 +201,7 @@ export default function HighscoreData() {
                             <TableCell
                                 style={{
                                     fontWeight: "bold",
+                                    textAlign: "right",
                                 }}
                             >
                                 Pontuação
@@ -248,7 +249,7 @@ export default function HighscoreData() {
                             <TableCell component="th" scope="row">
                                 Nível {row.level}
                             </TableCell>
-                            <TableCell component="th" scope="row">
+                            <TableCell component="th" scope="row" style={{ textAlign: "right" }}>
                                 {row.score}
                             </TableCell>
                         </TableRow>
@@ -268,11 +269,12 @@ export default function HighscoreData() {
                                 5,
                                 10,
                                 25,
-                                { label: "All", value: -1 },
+                                { label: "Todos", value: -1 },
                             ]}
-                            colSpan={3}
+                            colSpan={5}
                             count={rows.length}
                             rowsPerPage={rowsPerPage}
+                            labelRowsPerPage="Linhas por página:"
                             page={page}
                             SelectProps={{
                                 inputProps: {
