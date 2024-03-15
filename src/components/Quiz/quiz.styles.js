@@ -13,6 +13,8 @@ export const Container = styled.div`
 
 export const Pontuação = styled.div`
     display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
     min-height: 200px;
     font-size: 24px;
     justify-content: center;

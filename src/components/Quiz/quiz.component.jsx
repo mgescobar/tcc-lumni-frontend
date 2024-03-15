@@ -16,8 +16,75 @@ import {
 } from "./quiz.styles";
 import { ClassNames } from "@emotion/react";
 import { useNavigate, useLocation } from "react-router-dom";
+import Modal from "@mui/material/Modal";
 
-const useStyles = makeStyles((theme) => ({}));
+const useStyles = makeStyles((theme) => ({
+    paperModal: {
+        overflowX: "hidden",
+        overflowY: "auto",
+        marginLeft: "50%",
+        marginTop: "15%",
+        transform: "translateX(-50%)",
+        width: 500,
+        background: "white",
+        maxHeight: 800,
+        border: "1px solid grey",
+        borderRadius: "10px",
+        boxShadow:
+            "0px 2.075px 4.15px rgba(0, 0, 0, 0.16), 0px 4.15px 8.3px rgba(0, 0, 0, 0.12), 0px 2.075px 16.6px rgba(0, 0, 0, 0.1)",
+        padding: "2rem",
+        fontFamily: "Roboto",
+        textAlign: "center",
+        "@media (max-width: 680px)": {
+            marginTop: "80%",
+            transform: "translate(-50%, -50%) scale(0.7)",
+        },
+    },
+    paperModal2: {
+        overflowX: "hidden",
+        overflowY: "auto",
+        marginLeft: "50%",
+        marginTop: "15%",
+        transform: "translateX(-50%)",
+        width: 700,
+        background: "white",
+        maxHeight: 800,
+        border: "1px solid grey",
+        borderRadius: "10px",
+        boxShadow:
+            "0px 2.075px 4.15px rgba(0, 0, 0, 0.16), 0px 4.15px 8.3px rgba(0, 0, 0, 0.12), 0px 2.075px 16.6px rgba(0, 0, 0, 0.1)",
+        padding: "2rem",
+        fontFamily: "Roboto",
+        textAlign: "center",
+        "@media (max-width: 680px)": {
+            marginTop: "80%",
+            transform: "translate(-50%, -50%) scale(0.7)",
+        },
+    },
+    buttonModal: {
+        width: "12rem",
+        background: "#7a5ee0",
+        height: "55px",
+        textTransform: "inherit",
+        float: "center",
+        fontFamily: "Roboto",
+        fontWeight: 700,
+        marginLeft: "4rem",
+        marginTop: "1rem",
+        fontSize: 15,
+        borderRadius: "15px",
+        padding: "20px",
+        boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
+    },
+    textControl: {
+        width: "100%",
+        margin: "12px",
+        "@media (max-width: 680px)": {
+            width: "100%",
+            padding: 10,
+        },
+    }
+}));
 
 function QuizData() {
     const [questions, setquestions] = useState([]);
@@ -29,6 +96,13 @@ function QuizData() {
     const [pontos, setPontos] = useState(0);
     const [playerID, setplayerID] = useState(0);
     const Value = useLocation().state;
+    const navigate = useNavigate();
+    const classes = useStyles();
+
+    const [openEndQuiz, setOpenEndQuiz] = React.useState(false);
+    const [openBringNextQuestion, setOpenBringNextQuestion] = React.useState(false);
+    const [bringNextQuestion, setBringNextQuestion] = useState(false);
+    const [noQuestions, setNoQuestions] = useState(false);
 
     const scoreTable = [
         {
@@ -47,7 +121,24 @@ function QuizData() {
             score: 75
         }
     ]
- 
+
+    const handleCloseEndQuiz = () => {
+        setOpenEndQuiz(false);
+    };
+
+    const handleCloseBringNextQuestion = () => {
+        setOpenBringNextQuestion(false);
+    }
+
+    const handleBringNextQuestion = () => {
+        setBringNextQuestion(!bringNextQuestion);
+        setOpenBringNextQuestion(false);
+    }
+
+    const handleBringNextQuestionInFeedback = () => {
+        setBringNextQuestion(!bringNextQuestion);
+        setShowPontuacao(!showPontuacao);
+    }
 
     useEffect(() => {
         async function findperguntas() {
@@ -64,6 +155,12 @@ function QuizData() {
                     setplayerID(player.data.player[0].id);
                     setPontos(player.data.player[0].score);
                     response = await api.get(`/randomProblemByTheme/${player.data.player[0].id}/theme/${category_name.value}`);
+                }
+
+                console.log(response.data.message); 
+                if(response.data.message == "Não foram encontrada perguntas com esse tema para esse jogador."){
+                    setNoQuestions(true);
+                    return;
                 }
 
                 const letras = ["A)", "B)", "C)", "D)", "E)"];
@@ -93,7 +190,7 @@ function QuizData() {
             }
         }
         findperguntas();
-    }, []);
+    }, [bringNextQuestion]);
 
     function proximaPergunta(correta, pergunta) {
         const nextQuestion = perguntaAtual + 1;
@@ -111,7 +208,7 @@ function QuizData() {
                 console.log(err);
             }
         }
-
+        console.log(nextQuestion, questions.length);
         if (nextQuestion < questions.length) {
             setPerguntaAtual(nextQuestion);
         } else {
@@ -131,7 +228,6 @@ function QuizData() {
     }
 
     async function saveResult() {
-        
         try {
             await api.post("answers" , {
                 option_id: ArmazenaRespondida[0].resposta.id,
@@ -143,13 +239,89 @@ function QuizData() {
             console.log(err);
         }
     }
-    /*
-   return questions[0] ? (
-        console.log(questions),
-        <h1>
-            {questions[0].opcoesResposta[0].resposta}
-        </h1>
-    ): console.log("nada");*/
+
+    const bodyEndQuiz = (
+        //modal to accept or reject answer
+        <div className={classes.paperModal}>
+            <h2 id="simple-modal-title">Deseja mesmo encerrar o quiz?</h2>
+            <div 
+                id="simple-modal-description"
+                style={{ 
+                    display: "flex", 
+                    justifyContent: "space-evenly", 
+                    marginTop: "50px"
+                }}
+            >
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => navigate("/")}
+                    style={{ width: "15%" }}
+                >
+                    Sim
+                </Button>
+                <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleCloseEndQuiz}
+                    style={{ width: "15%" }}
+                >
+                    Não
+                </Button>
+            </div>
+        </div>
+    );
+
+    const bodyNextQuestion = (
+        <div className={classes.paperModal2}>
+            <h2 id="simple-modal-title">Deseja pular essa pergunta?</h2>
+            <span
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "30px",
+                    fontSize: "20px",
+                }}
+            >
+                Você irá receber outra pergunta aleatória que ainda não foi respondida.
+            </span>
+            <span 
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "10px",
+                    fontSize: "20px",
+                }}
+            > 
+                Portanto, essa pergunta irá retornar em algum momento.
+            </span>
+            <div
+                id="simple-modal-description"
+                style={{
+                    display: "flex",
+                    justifyContent: "space-evenly",
+                    marginTop: "50px",
+                }}
+            >
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleBringNextQuestion()}
+                    style={{ width: "15%" }}
+                >
+                    Sim
+                </Button>
+                <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleCloseBringNextQuestion}
+                    style={{ width: "15%" }}
+                >
+                    Não
+                </Button>
+            </div>
+        </div>
+    );
 
     return questions[0] ? (
         <Container>
@@ -161,7 +333,7 @@ function QuizData() {
                                 <span style={{ color: 'green' }}>Correto!</span> Você acertou uma pergunta de nível {scoreTable[questions[perguntaAtual].pergunta.level].nivel} e ganhou <span style={{ color: 'green' }}>{scoreTable[questions[perguntaAtual].pergunta.level].score}</span> pontos.
                                 <br></br>Sua pontuação agora é: <span style={{ fontWeight: "bold" }}>{pontos}</span>
                                 <br></br><br></br>
-                                A alternativa correta é: {questions[perguntaAtual].opcoesResposta[0].resposta}
+                                <span style={{ fontWeight: "bold" }}>Alternativa correta:</span> {questions[perguntaAtual].opcoesResposta[0].resposta}
                             </span>
                         </>
                         : 
@@ -169,23 +341,45 @@ function QuizData() {
                             <span>
                                 <span style={{ color: 'red' }}>Errado!</span> Você errou a questão e sua pontuação se manteve em: <span style={{ fontWeight: "bold" }}>{pontos}</span>
                                 <br></br><br></br>
-                                Título: {questions[perguntaAtual].pergunta.question}
-                                <br></br>
-                                Alternativa correta: {questions[perguntaAtual].opcoesResposta[0].resposta}
-                                <br></br>
-                                Respondida: {ArmazenaRespondida[0].resposta.resposta}
+                                <span style={{ fontWeight: "bold" }}>Título:</span> {questions[perguntaAtual].pergunta.question}
+                                <br></br><br></br>
+                                <span style={{ fontWeight: "bold" }}>Alternativa correta:</span> {questions[perguntaAtual].opcoesResposta[0].resposta}
+                                <br></br><br></br>
+                                <span style={{ fontWeight: "bold" }}>Alternativa escolhida:</span> {ArmazenaRespondida[0].resposta.resposta}
                             </span>
+                            <div style={{ display: "flex", justifyContent: "center", marginTop: "30px" }}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                size="large"
+                                onClick={() => setOpenEndQuiz(true)}
+                            >
+                                Encerrar Quiz
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                size="large"
+                                onClick={() => handleBringNextQuestionInFeedback()}
+                                style={{ marginLeft: "30px" }}
+                            >
+                                Próxima pergunta
+                            </Button>
+                            </div>
                         </>
                     }
                 </Pontuação>
             ) : (
                 <>
-                    
                     <InfoPerguntas>
                         <ContagemPerguntas>
-                            <span>
-                                Pergunta {perguntaAtual + 1} de {questions.length} registradas
-                            </span>
+                            {
+                                questions[perguntaAtual].pergunta.level === 1 ?
+                                    <span style={{fontSize: "30px", fontWeight: "bold", color: "green", textAlign: "center"}}> Fácil</span>
+                                : questions[perguntaAtual].pergunta.level === 2 ? 
+                                    <span style={{fontSize: "30px", fontWeight: "bold", color: "orange", textAlign: "center"}}>Intermediário</span>
+                                : <span style={{fontSize: "30px", fontWeight: "bold", color: "red", textAlign: "center"}}>Difícil</span>
+                            }
                         </ContagemPerguntas>
                         <Pergunta style={{fontSize: "20px", fontWeight: "bold", textAlign: "center"}}>
                             {questions[perguntaAtual].pergunta.question}
@@ -211,12 +405,76 @@ function QuizData() {
                             ),
                         )}
                     </Resposta>
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-evenly",
+                            marginTop: "50px",
+                        }}
+                    >
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            size="large"
+                            onClick={() => setOpenEndQuiz(true)}
+                        >
+                            Encerrar Quiz
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            size="large"
+                            onClick={() => setOpenBringNextQuestion(true)}
+                        >
+                            Pular pergunta
+                        </Button>
+                    </div>
+                    <Modal
+                        open={openEndQuiz}
+                        onClose={handleCloseEndQuiz}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        {bodyEndQuiz}
+                    </Modal>
+                    <Modal
+                        open={openBringNextQuestion}
+                        onClose={handleCloseBringNextQuestion}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        {bodyNextQuestion}
+                    </Modal>
                 </>
             )}
         </Container>
     ) : (
-        <h1>Carregando...</h1>
-        //load the page
+        {noQuestions} ? (
+            <Container>
+                <Pontuação>
+                    <span>
+                        Parabéns! Você zerou todas as perguntas desse tema do quiz.
+                        <br></br>
+                        <br></br>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            size="large"
+                            onClick={() => navigate("/Filter")}
+                        >
+                            Voltar para o quiz
+                        </Button>
+                    </span>
+                </Pontuação>
+            </Container>
+        ) : (
+            <Container>
+                <Pontuação>
+                    <span>Carregando...</span>
+                </Pontuação>
+            </Container>
+        )
     );
 }
 

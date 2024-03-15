@@ -222,7 +222,7 @@ export default function DashboardData() {
                                         
                                         <br />
                                         <h3 className={classes.h3}>
-                                            {playerData.average ? playerData.average : "0"}
+                                            {playerData.average ? playerData.average : "0"}%
                                         </h3>{" "}
                                         média de acertos.
                                     </div>

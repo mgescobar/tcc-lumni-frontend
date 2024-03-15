@@ -53,8 +53,6 @@ import Grid from "@mui/material/Grid";
 
 import api from "../../services/api";
 import Categories from "../../api/Categories";
-//Context
-//import { AuthProvider } from "../../contexts/AuthContext";
 
 const theme = createTheme({
     palette: {
@@ -371,21 +369,6 @@ export default function QuestionsData() {
             console.log(err);
         }
     }
-
-    /* pega as questoes do back e atribui no rows. 
-  useEffect(() => {
-    const callApiFindAllQuestions = async () => {
-      const response = await api.get("/findAllProblems");
-      setRows(response.data);
-    };
-
-    try {
-      callApiFindAllQuestions();
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
-  */
 
     const handleOpen = () => {
         setOpen(true);
