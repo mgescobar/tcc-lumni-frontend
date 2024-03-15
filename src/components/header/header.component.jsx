@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     },
     letterMenu1: {
         fontSize: "16px",
-        fontWeight: 400,
+        fontWeight: "bold",
         padding: "10px",
         color: "#01263f",
         textDecoration: "none",
@@ -162,7 +162,7 @@ const ResponsiveAppBar = () => {
                                             Dashboard
                                         </ListItemButton>
                                     </NavLink>
-                                    playerData.user.type !== 3 ?
+                                    {playerData && playerData.user?.type !== 3 ?
                                         <NavLink
                                             className={classes.letterMenu1}
                                             to="/Questions"
@@ -171,13 +171,24 @@ const ResponsiveAppBar = () => {
                                                 Perguntas
                                             </ListItemButton>
                                         </NavLink>
-                                        :
-                                        null
+                                    : null}
                                     <NavLink
                                         className={classes.letterMenu1}
                                         to="/Filter"
                                     >
                                         <ListItemButton>Quiz</ListItemButton>
+                                    </NavLink>
+                                    <NavLink
+                                        className={classes.letterMenu1}
+                                        to="/Highscore"
+                                    >
+                                        <ListItemButton>Placar</ListItemButton>
+                                    </NavLink>
+                                    <NavLink
+                                        className={classes.letterMenu1}
+                                        onClick={() => logout()}
+                                    >
+                                        <ListItemButton>Sair da plataforma</ListItemButton>
                                     </NavLink>
                                 </Typography>
                             </MenuItem>
