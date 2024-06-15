@@ -22,6 +22,8 @@ const options = [
     "Difícil"
 ];
 
+Categories.unshift({ category: "Todos os temas", value: 3 });
+
 function FilterQuizData(name, setName, fetchQuestions) {
     const [questionLevel, setQuestionLevel] = useState("");
     const [category, setCategory] = useState("");

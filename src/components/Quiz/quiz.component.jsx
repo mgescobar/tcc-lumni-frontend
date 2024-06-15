@@ -158,58 +158,111 @@ function QuizData() {
 
     useEffect(() => {
         setResetaContagem(true)
-        async function findperguntas() {
-            try {
+        if (Value.category === 3) {
+            async function findperguntasRandom() {
+                try {
+                    const id = JSON.parse(localStorage.getItem("user")).id;
+                    const player = await api.get(`/findUser/${id}`);
+                    var response;
 
-                const id = JSON.parse(localStorage.getItem("user")).id;
-                const category_name = Categories.find((item) => item.value == Value.category);
-                const player = await api.get(`/findUser/${id}`);
-                var response;
+                    if(player.data.player.length == 0){
+                        response = await api.get(`/randomProblem/${2}`);
+                    } else {
+                        setplayerID(player.data.player[0].id);
+                        setPontos(player.data.player[0].score);
+                        response = await api.get(`/randomProblem/${player.data.player[0].id}/`);
+                    }
 
-                if(player.data.player.length == 0){
-                    response = await api.get(`/randomProblem/${2}`);
-                } else {
-                    setplayerID(player.data.player[0].id);
-                    setPontos(player.data.player[0].score);
-                    response = await api.get(`/randomProblemByTheme/${player.data.player[0].id}/theme/${category_name.value}`);
-                }
+                    if(response.data.message == "Não foram encontrada perguntas com esse tema para esse jogador."){
+                        setNoQuestions(true);
+                        return;
+                    }
 
-                if(response.data.message == "Não foram encontrada perguntas com esse tema para esse jogador."){
-                    setNoQuestions(true);
-                    return;
-                }
-
-                const letras = ["A)", "B)", "C)", "D)", "E)"];
-                const array_obj = [response.data];
-                const newObject = array_obj.map((item, index) => {
-                    return {
-                        pergunta:{
-                            level: item.problems[index].level,
-                            question: item.problems[index].description,
-                            id: item.problems[index].id,
-                        },
-                        opcoesResposta: item.options
-                        .filter((item) => item.description != "" && item.description != null && item.description.trim() != "")
-                        .map((item2, index2) => {
-                            return {
-                                id: item2.id,
-                                resposta: item2.description,
-                                correta: item2.correct,
-                                alternativa: letras[index2],
-                            };
-                        }),
-                    };
-                });
-                setquestions(newObject);
-            } catch (err) {
-                console.log(err);
-                if(err.response.data.message == "Não foram encontrada perguntas com esse tema para esse jogador."){
-                    setNoQuestions(true);
-                    setquestions([]);
+                    const letras = ["A)", "B)", "C)", "D)", "E)"];
+                    const array_obj = [response.data];
+                    const newObject = array_obj.map((item, index) => {
+                        return {
+                            pergunta:{
+                                level: item.problems[index].level,
+                                question: item.problems[index].description,
+                                id: item.problems[index].id,
+                            },
+                            opcoesResposta: item.options
+                            .filter((item) => item.description != "" && item.description != null && item.description.trim() != "")
+                            .map((item2, index2) => {
+                                return {
+                                    id: item2.id,
+                                    resposta: item2.description,
+                                    correta: item2.correct,
+                                    alternativa: letras[index2],
+                                };
+                            }),
+                        };
+                    });
+                    setquestions(newObject);
+                } catch (err) {
+                    console.log(err);
+                    if(err.response.data.message == "Não foram encontrada perguntas com esse tema para esse jogador."){
+                        setNoQuestions(true);
+                        setquestions([]);
+                    }
                 }
             }
+            findperguntasRandom();
+        } else {
+            async function findperguntas() {
+                try {
+
+                    const id = JSON.parse(localStorage.getItem("user")).id;
+                    const category_name = Categories.find((item) => item.value == Value.category);
+                    const player = await api.get(`/findUser/${id}`);
+                    var response;
+
+                    if(player.data.player.length == 0){
+                        response = await api.get(`/randomProblem/${2}`);
+                    } else {
+                        setplayerID(player.data.player[0].id);
+                        setPontos(player.data.player[0].score);
+                        response = await api.get(`/randomProblemByTheme/${player.data.player[0].id}/theme/${category_name.value}`);
+                    }
+
+                    if(response.data.message == "Não foram encontrada perguntas com esse tema para esse jogador."){
+                        setNoQuestions(true);
+                        return;
+                    }
+
+                    const letras = ["A)", "B)", "C)", "D)", "E)"];
+                    const array_obj = [response.data];
+                    const newObject = array_obj.map((item, index) => {
+                        return {
+                            pergunta:{
+                                level: item.problems[index].level,
+                                question: item.problems[index].description,
+                                id: item.problems[index].id,
+                            },
+                            opcoesResposta: item.options
+                            .filter((item) => item.description != "" && item.description != null && item.description.trim() != "")
+                            .map((item2, index2) => {
+                                return {
+                                    id: item2.id,
+                                    resposta: item2.description,
+                                    correta: item2.correct,
+                                    alternativa: letras[index2],
+                                };
+                            }),
+                        };
+                    });
+                    setquestions(newObject);
+                } catch (err) {
+                    console.log(err);
+                    if(err.response.data.message == "Não foram encontrada perguntas com esse tema para esse jogador."){
+                        setNoQuestions(true);
+                        setquestions([]);
+                    }
+                }
+            }
+            findperguntas();
         }
-        findperguntas();
     }, [bringNextQuestion]);
 
     function proximaPergunta(correta, pergunta) {
