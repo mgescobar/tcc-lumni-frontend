@@ -139,9 +139,7 @@ const useStyles = makeStyles((theme) => ({
 
 const themenome = [
     { name: "Scrum", value: 1 },
-    { name: "FDD", value: 2 },
-    { name: "Grouwth Hacking", value: 3 },
-    { name: "Google Design Sprint", value: 4 },
+    { name: "Extreme Programming", value: 2 },
 ];
 
 const teste = {

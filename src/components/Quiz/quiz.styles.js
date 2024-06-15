@@ -28,6 +28,14 @@ export const InfoPerguntas = styled.div`
     position: relative;
 `;
 
+export const ContagemTempo = styled.div`
+    display: flex;
+    justify-content: left;
+    font-size: 18px;
+    font-weight: bold;
+    color: #9061f9
+`;
+
 export const ContagemPerguntas = styled.div`
     display: flex;
     justify-content: center;

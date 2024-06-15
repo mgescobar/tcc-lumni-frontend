@@ -13,6 +13,7 @@ import {
     GrupoResposta,
     Resposta,
     ButtonAnswer,
+    ContagemTempo
 } from "./quiz.styles";
 import { ClassNames } from "@emotion/react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -91,6 +92,8 @@ function QuizData() {
     const [ArmazenaRespondida, setArmazenaRespondida] = useState([]);
     const [indexRespondida, setIndexRespondida] = useState(0);
     const [perguntaAtual, setPerguntaAtual] = useState(0);
+    const [tempo, setTempo] = useState(0);
+    const [resetaContagem, setResetaContagem] = useState(false);
     const [showPontuacao, setShowPontuacao] = useState(false);
     const [acertou, setAcertou] = useState(false);
     const [pontos, setPontos] = useState(0);
@@ -131,6 +134,7 @@ function QuizData() {
     }
 
     const handleBringNextQuestion = () => {
+        setResetaContagem(true);
         setBringNextQuestion(!bringNextQuestion);
         setOpenBringNextQuestion(false);
     }
@@ -140,7 +144,20 @@ function QuizData() {
         setShowPontuacao(!showPontuacao);
     }
 
+    useLayoutEffect(() => {
+        if (!resetaContagem) {
+            const timer = setInterval(() => {
+                setTempo(tempo + 1);
+            }, 1000);
+            return () => clearInterval(timer);
+        } else {
+            setTempo(0);
+            setResetaContagem(false);
+        }
+    }, [resetaContagem, tempo]);
+
     useEffect(() => {
+        setResetaContagem(true)
         async function findperguntas() {
             try {
 
@@ -157,7 +174,6 @@ function QuizData() {
                     response = await api.get(`/randomProblemByTheme/${player.data.player[0].id}/theme/${category_name.value}`);
                 }
 
-                console.log(response.data.message); 
                 if(response.data.message == "Não foram encontrada perguntas com esse tema para esse jogador."){
                     setNoQuestions(true);
                     return;
@@ -187,6 +203,10 @@ function QuizData() {
                 setquestions(newObject);
             } catch (err) {
                 console.log(err);
+                if(err.response.data.message == "Não foram encontrada perguntas com esse tema para esse jogador."){
+                    setNoQuestions(true);
+                    setquestions([]);
+                }
             }
         }
         findperguntas();
@@ -197,18 +217,18 @@ function QuizData() {
         var response;
 
         if (correta) {
-            setPontos(pontos + scoreTable[pergunta.pergunta.level].score);
+            setPontos(pontos + scoreTable[pergunta.pergunta.level-1].score);
             setAcertou(true);
             try {
                 response = api.post(`/addScore/${playerID}`, {
-                    addScore: scoreTable[pergunta.pergunta.level].score
+                    addScore: scoreTable[pergunta.pergunta.level-1].score
                 });
             }
             catch (err) {
                 console.log(err);
             }
         }
-        console.log(nextQuestion, questions.length);
+        console.log(nextQuestion, questions.length)
         if (nextQuestion < questions.length) {
             setPerguntaAtual(nextQuestion);
         } else {
@@ -221,8 +241,9 @@ function QuizData() {
         const resultado = {
             pergunta: pergunta,
             resposta: opcoesResposta,
+            tempo: tempo
         }
-
+        
         ArmazenaRespondida.push(resultado);
         saveResult();
     }
@@ -230,18 +251,18 @@ function QuizData() {
     async function saveResult() {
         try {
             await api.post("answers" , {
-                option_id: ArmazenaRespondida[0].resposta.id,
-                used_time: 30,
+                option_id: ArmazenaRespondida[ArmazenaRespondida.length - 1].resposta.id,
                 player_id: playerID,
-                problem_id: ArmazenaRespondida[0].pergunta,
+                problem_id: ArmazenaRespondida[ArmazenaRespondida.length - 1].pergunta,
+                used_time: ArmazenaRespondida[ArmazenaRespondida.length - 1].tempo
             })
         } catch (err) {
             console.log(err);
         }
+        setResetaContagem(true);
     }
 
     const bodyEndQuiz = (
-        //modal to accept or reject answer
         <div className={classes.paperModal}>
             <h2 id="simple-modal-title">Deseja mesmo encerrar o quiz?</h2>
             <div 
@@ -323,17 +344,47 @@ function QuizData() {
         </div>
     );
 
+    function correctOption (question) {
+        return question.opcoesResposta.filter((item) => item.correta === 1)[0].resposta;
+    }
+
     return questions[0] ? (
         <Container>
-            {showPontuacao ? (
+            {showPontuacao && !noQuestions ? (
                 <Pontuação>
                     {acertou ? 
                         <>
                             <span>
-                                <span style={{ color: 'green' }}>Correto!</span> Você acertou uma pergunta de nível {scoreTable[questions[perguntaAtual].pergunta.level].nivel} e ganhou <span style={{ color: 'green' }}>{scoreTable[questions[perguntaAtual].pergunta.level].score}</span> pontos.
+                                <span style={{ color: 'green' }}>Correto!</span> Você acertou uma pergunta de nível {scoreTable[questions[perguntaAtual].pergunta.level-1].nivel} e ganhou <span style={{ color: 'green' }}>{scoreTable[questions[perguntaAtual].pergunta.level-1].score}</span> pontos.
                                 <br></br>Sua pontuação agora é: <span style={{ fontWeight: "bold" }}>{pontos}</span>
                                 <br></br><br></br>
-                                <span style={{ fontWeight: "bold" }}>Alternativa correta:</span> {questions[perguntaAtual].opcoesResposta[0].resposta}
+                                <span style={{ fontWeight: "bold" }}>Alternativa correta:</span> {correctOption(questions[perguntaAtual])}
+                                <br></br><br></br>
+                                <span style={{ fontWeight: "bold" }}>Você demorou {
+                                ArmazenaRespondida[0].tempo >= 60 ? 
+                                    <span style={{ color: '#9061f9'}}>{Math.floor(ArmazenaRespondida[ArmazenaRespondida.length-1].tempo / 60)} minutos e {ArmazenaRespondida[ArmazenaRespondida.length-1].tempo % 60} segundos</span>
+                                :
+                                    <span style={{ color: '#9061f9'}}>{ArmazenaRespondida[ArmazenaRespondida.length-1].tempo} segundos</span>
+                                } para responder.</span>
+                                <div style={{ display: "flex", justifyContent: "center", marginTop: "30px" }}>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        size="large"
+                                        onClick={() => setOpenEndQuiz(true)}
+                                    >
+                                        Encerrar Quiz
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        size="large"
+                                        onClick={() => handleBringNextQuestionInFeedback()}
+                                        style={{ marginLeft: "30px" }}
+                                    >
+                                        Próxima pergunta
+                                    </Button>
+                                </div>
                             </span>
                         </>
                         : 
@@ -343,28 +394,35 @@ function QuizData() {
                                 <br></br><br></br>
                                 <span style={{ fontWeight: "bold" }}>Título:</span> {questions[perguntaAtual].pergunta.question}
                                 <br></br><br></br>
-                                <span style={{ fontWeight: "bold" }}>Alternativa correta:</span> {questions[perguntaAtual].opcoesResposta[0].resposta}
+                                <span style={{ fontWeight: "bold" }}>Alternativa correta:</span> {correctOption(questions[perguntaAtual])}
                                 <br></br><br></br>
                                 <span style={{ fontWeight: "bold" }}>Alternativa escolhida:</span> {ArmazenaRespondida[0].resposta.resposta}
+                                <br></br><br></br>
+                                <span style={{ fontWeight: "bold" }}>Você demorou {
+                                ArmazenaRespondida[0].tempo >= 60 ? 
+                                    <span style={{ color: '#9061f9'}}>{Math.floor(ArmazenaRespondida[ArmazenaRespondida.length-1].tempo / 60)} minutos e {ArmazenaRespondida[ArmazenaRespondida.length-1].tempo % 60} segundos</span>
+                                :
+                                    <span style={{ color: '#9061f9'}}>{ArmazenaRespondida[ArmazenaRespondida.length-1].tempo} segundos</span>
+                                } para responder.</span>
                             </span>
                             <div style={{ display: "flex", justifyContent: "center", marginTop: "30px" }}>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                size="large"
-                                onClick={() => setOpenEndQuiz(true)}
-                            >
-                                Encerrar Quiz
-                            </Button>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                size="large"
-                                onClick={() => handleBringNextQuestionInFeedback()}
-                                style={{ marginLeft: "30px" }}
-                            >
-                                Próxima pergunta
-                            </Button>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    size="large"
+                                    onClick={() => setOpenEndQuiz(true)}
+                                >
+                                    Encerrar Quiz
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    size="large"
+                                    onClick={() => handleBringNextQuestionInFeedback()}
+                                    style={{ marginLeft: "30px" }}
+                                >
+                                    Próxima pergunta
+                                </Button>
                             </div>
                         </>
                     }
@@ -372,6 +430,14 @@ function QuizData() {
             ) : (
                 <>
                     <InfoPerguntas>
+                        <ContagemTempo>
+                            {
+                                tempo >= 60 ? 
+                                    <span>Tempo: {Math.floor(tempo / 60)} minutos e {tempo % 60} segundos</span>
+                                :
+                                    <span>Tempo: {tempo} segundos</span>
+                            }
+                        </ContagemTempo>
                         <ContagemPerguntas>
                             {
                                 questions[perguntaAtual].pergunta.level === 1 ?
@@ -425,7 +491,9 @@ function QuizData() {
                             variant="contained"
                             color="primary"
                             size="large"
-                            onClick={() => setOpenBringNextQuestion(true)}
+                            onClick={() => 
+                                setOpenBringNextQuestion(true)
+                            }
                         >
                             Pular pergunta
                         </Button>
