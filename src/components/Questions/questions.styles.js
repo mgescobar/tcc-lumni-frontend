@@ -9,7 +9,7 @@ export const Container = styled.div`
   border: 1px solid rgba(209, 213, 219, 0);
   box-shadow: 4px 2px 50px rgba(0, 0, 0, 0.2);
   max-width: 85%;
-  height: 450px;
+  height: 600px;
 
   @media screen and (max-width: 800px) {
     margin: 100px auto;

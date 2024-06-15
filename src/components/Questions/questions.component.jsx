@@ -52,7 +52,7 @@ import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid";
 
 import api from "../../services/api";
-import Categories from "../../api/Categories";
+import { CategoriesQuestion } from "../../api/Categories";
 
 const theme = createTheme({
     palette: {
@@ -511,7 +511,7 @@ export default function QuestionsData() {
                             variant="outlined"
                             style={{ marginBottom: 30, width: "100%" }}
                         >
-                            {Categories.map((cat) => (
+                            {CategoriesQuestion.map((cat) => (
                                 <MenuItem key={cat.category} value={cat.value}>
                                     {cat.category}
                                 </MenuItem>
@@ -676,7 +676,7 @@ export default function QuestionsData() {
                             variant="outlined"
                             style={{ marginBottom: 30, width: "100%" }}
                         >
-                            {Categories.map((cat) => (
+                            {CategoriesQuestion.map((cat) => (
                                 <MenuItem key={cat.category} value={cat.value}>
                                     {cat.category}
                                 </MenuItem>
@@ -835,7 +835,7 @@ export default function QuestionsData() {
                                 {row.description}
                             </TableCell>
                             <TableCell component="th" scope="row">
-                                Nível {row.level}
+                                {options[row.level - 1]}
                             </TableCell>
 
                             <TableCell style={{ width: 160 }} align="right">

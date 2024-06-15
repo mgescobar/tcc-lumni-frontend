@@ -2,7 +2,7 @@ import React, { useEffect, useState, useLayoutEffect } from "react";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import api from "../../services/api";
-import Categories from "../../api/Categories";
+import { CategoriesQuiz } from "../../api/Categories";
 import Autocomplete from "@mui/material/Autocomplete";
 import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
 import Button from "@mui/material/Button";
@@ -21,8 +21,6 @@ const options = [
     "Intermediário",
     "Difícil"
 ];
-
-Categories.unshift({ category: "Todos os temas", value: 3 });
 
 function FilterQuizData(name, setName, fetchQuestions) {
     const [questionLevel, setQuestionLevel] = useState("");
@@ -82,7 +80,7 @@ function FilterQuizData(name, setName, fetchQuestions) {
                             variant="outlined"
                             style={{ marginBottom: 30, width: "100%" }}
                         >
-                            {Categories.map((cat) => (
+                            {CategoriesQuiz.map((cat) => (
                                 <MenuItem key={cat.category} value={cat.value}>
                                     {cat.category}
                                 </MenuItem>

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useLayoutEffect} from "react";
 import api from "../../services/api";
 import Button from "@mui/material/Button";
 import makeStyles from "@mui/styles/makeStyles";
-import Categories from "../../api/Categories";
+import { CategoriesQuiz } from "../../api/Categories";
 /* Styles */
 import {
     Container,
@@ -214,7 +214,7 @@ function QuizData() {
                 try {
 
                     const id = JSON.parse(localStorage.getItem("user")).id;
-                    const category_name = Categories.find((item) => item.value == Value.category);
+                    const category_name = CategoriesQuiz.find((item) => item.value == Value.category);
                     const player = await api.get(`/findUser/${id}`);
                     var response;
 
@@ -281,7 +281,6 @@ function QuizData() {
                 console.log(err);
             }
         }
-        console.log(nextQuestion, questions.length)
         if (nextQuestion < questions.length) {
             setPerguntaAtual(nextQuestion);
         } else {

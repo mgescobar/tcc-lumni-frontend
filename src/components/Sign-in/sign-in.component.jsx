@@ -75,8 +75,6 @@ export default function SignIn() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        //console.log(email, password);
-        // check if login and password are not null or empty strings
         if (!email || !password) {
             setHasAuthError("Por favor, preencha todos os campos");
             return;
