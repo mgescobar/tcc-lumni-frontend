@@ -2,6 +2,7 @@ import * as React from "react";
 import { useState, useEffect, useContext } from "react";    
 /* Material UI */
 import makeStyles from "@mui/styles/makeStyles";
+import { UserRole } from "./header.styles"; 
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import AppBar from "@mui/material/AppBar";
@@ -256,15 +257,16 @@ const ResponsiveAppBar = () => {
                                     </NavLink>
                                 </List>
                             </Box>
-                            
-                            {playerData && playerData.user?.type === 1 ? (
-                                    <h3>Admnistrador: {playerData.user?.name}</h3>
-                                    ) : playerData && playerData.user?.type === 2 ? (
-                                    <h3>Professor: {playerData.user?.name}</h3>
-                                    ) : playerData && playerData.user?.type === 3 ? (
-                                    <h3>Aluno: {playerData.user?.name}</h3>
-                                    ) : null 
-                            }
+                            <UserRole>
+                                {playerData && playerData.user?.type === 1 ? (
+                                        <h3>Admnistrador: {playerData.user?.name}</h3>
+                                        ) : playerData && playerData.user?.type === 2 ? (
+                                        <h3>Professor: {playerData.user?.name}</h3>
+                                        ) : playerData && playerData.user?.type === 3 ? (
+                                        <h3>Aluno: {playerData.user?.name}</h3>
+                                        ) : null 
+                                }
+                            </UserRole>
 
                             <Box sx={{ flexGrow: 0, marginLeft: '20px' }}>
                                 <Tooltip title="Abrir configurações">
