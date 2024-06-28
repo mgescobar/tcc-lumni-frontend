@@ -200,13 +200,20 @@ export default function DashboardData() {
     const ex = mx + (cos >= 0 ? 1 : -1) * 22;
     const ey = my;
     const textAnchor = cos >= 0 ? 'start' : 'end';
-    const correctRate = ((payload.correct / value) * 100).toFixed(2);
-    const incorrectRate = ((payload.incorrect / value) * 100).toFixed(2);
+    let correctRate = ((payload.corretas / payload.respondidas) * 100).toFixed(2);
+    let incorrectRate = ((payload.incorretas / payload.respondidas) * 100).toFixed(2);
+
+    if (correctRate === "NaN") {
+      correctRate = 0;
+    }
+    if (incorrectRate === "NaN") {
+      incorrectRate = 0;
+    }
   
     return (
       <g>
         <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
-          {payload.name}
+          {payload.tema}
         </text>
         <Sector
           cx={cx}
@@ -228,12 +235,17 @@ export default function DashboardData() {
         />
         <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
         <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{`Total ${value}`}</text>
-        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="green">
-          {`Acertos: ${payload.correct} (${correctRate}%)`}
+        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">
+          {`Perguntas registradas: ${value}`}
         </text>
-        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={36} textAnchor={textAnchor} fill="red">
-          {`Erros: ${payload.incorrect} (${incorrectRate}%)`}
+        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#333">
+          {`Respostas: ${payload.respondidas}`}
+        </text>
+        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={36} textAnchor={textAnchor} fill="green">
+          {`Acertos: ${payload.corretas} (${correctRate}%)`}
+        </text>
+        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={54} textAnchor={textAnchor} fill="red">
+          {`Erros: ${payload.incorretas} (${incorrectRate}%)`}
         </text>
       </g>
     );
@@ -389,13 +401,13 @@ export default function DashboardData() {
                     <Pie
                       activeIndex={activeIndex}
                       activeShape={renderActiveShape}
-                      data={generalData}
+                      data={generalDataGraph}
                       cx="50%"
                       cy="50%"
                       innerRadius={60}
                       outerRadius={80}
                       fill="#8884d8"
-                      dataKey="value"
+                      dataKey="registradas"
                       onMouseEnter={(event, index) => setActiveIndex(index)}
                     />
                   </PieChart>
