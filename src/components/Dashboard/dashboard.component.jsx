@@ -331,7 +331,6 @@ export default function DashboardData() {
       <Container>
         {" "}
         <Title className={classes.styleTitle}>
-          Dashboard
           <TitleFilters className={classes.filters}>
             Filtros:
             <Autocomplete
@@ -342,7 +341,7 @@ export default function DashboardData() {
               value={player}
               disabled={user.type === 3}
               getOptionLabel={(option) => option.name || ''}
-              style={{ width: 300 }}
+              style={{ width: window.innerWidth > 320 ? 250 : 300 }}
               renderInput={(params) => <TextField {...params} label="Aluno(s)" variant="outlined" size="small" />}
               onChange={(event, value) => {
                 if(!value) setPlayer(playerOptions[0]);
@@ -356,7 +355,7 @@ export default function DashboardData() {
               noOptionsText={'Sem temas'}
               value={theme}
               getOptionLabel={(option) => option.name || ''}
-              style={{ width: 300 }}
+              style={{ width: window.innerWidth > 320 ? 250 : 300 }}
               renderInput={(params) => <TextField {...params} label="Tema(s)" variant="outlined" size="small" />}
               onChange={(event, value) => {
                 if(!value) setTheme(themeOptions[0]);
@@ -370,7 +369,7 @@ export default function DashboardData() {
               noOptionsText={'Sem perguntas respondidas'}
               value={question}
               getOptionLabel={(option) => option.description || ''}
-              style={{ width: 300 }}
+              style={{ width: window.innerWidth > 320 ? 250 : 300 }}
               renderInput={(params) => <TextField {...params} label="Pergunta(s)" variant="outlined" size="small" />}
               onChange={(event, value) => {
                 if(!value) setQuestion(questionOptions[0]);

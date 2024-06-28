@@ -159,4 +159,18 @@ export const TitleFilters = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media screen and (max-width: 860px) {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 20px;
+  }
+
+  @media screen and (max-width: 320px) {
+    // diminua o tamanho do campo do autocomplete
+    width: 120%;
+  }
+    
 `;
