@@ -477,7 +477,6 @@ export default function QuestionsData() {
                         placeholder="Informe aqui"
                         margin="normal"
                         type="text"
-                        value={questionTitle}
                         onChange={(event) =>
                             setQuestionTitle(event.target.value)
                         }
@@ -491,7 +490,7 @@ export default function QuestionsData() {
                             onChange={(event, newValue) => {
                                 setQuestionLevel(options.indexOf(newValue));
                             }}
-                            //value={options[questionLevel]} usar no edit
+                            value={options[questionLevel]}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
@@ -562,7 +561,6 @@ export default function QuestionsData() {
                 <RadioGroup
                     aria-labelledby="demo-controlled-radio-buttons-group"
                     name="controlled-radio-buttons-group"
-                    value={questionCorrect}
                     onChange={(event) => setQuestionCorrect(event.target.value)}
                 >
                     <Grid container spacing={2}>
@@ -865,16 +863,16 @@ export default function QuestionsData() {
                                 5,
                                 10,
                                 25,
-                                { label: "All", value: -1 },
+                                { label: "Todas", value: -1 },
                             ]}
                             colSpan={5}
                             count={rows.length}
                             rowsPerPage={rowsPerPage}
-                            labelRowsPerPage="Linhas por página:"
+                            labelRowsPerPage="Perguntas por página:"
                             page={page}
                             SelectProps={{
                                 inputProps: {
-                                    "aria-label": "Linhas por página",
+                                    "aria-label": "Perguntas por página",
                                 },
                                 native: true,
                             }}
