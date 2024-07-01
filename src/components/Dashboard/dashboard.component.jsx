@@ -518,7 +518,7 @@ export default function DashboardData() {
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="Dia da semana" />
-                <YAxis />
+                <YAxis allowDecimals={false}/>
                 <Tooltip />
                 <Legend />
                 <Line type="monotone" dataKey="Número de acessos" stroke="#0088FE" strokeWidth={2}/>
