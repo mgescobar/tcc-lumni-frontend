@@ -12,8 +12,14 @@ export const Container = styled.div`
   height: 450px;
 
   @media screen and (max-width: 800px) {
-    margin: 100px auto;
+    margin: 50px auto;
+    max-width: 95%;
     overflow-x: scroll;
+    height: 65vh;
+  }
+
+  @media screen and (max-width: 375px) {
+    max-width: 95%;
   }
 `;
 
@@ -22,12 +28,18 @@ export const ContainerTitle = styled.div`
   grid-template-areas: "title question";
   border-bottom: 1px solid #e0e0e0;
   padding: 20px 0;
+
   @media screen and (max-width: 800px) {
     grid-template-areas:
-      "title"
-      " question";
+      "title question";
+    grid-template-columns: 1fr 1fr;
     margin: auto;
   }
+
+  @media screen and (max-width: 530px) {
+    width: 58vh;
+  }
+    
 `;
 
 export const Title = styled.div`
