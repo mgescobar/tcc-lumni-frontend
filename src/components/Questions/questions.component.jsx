@@ -211,7 +211,7 @@ TablePaginationActions.propTypes = {
 
 const options = [
     "Fácil",
-    "Intermediário",
+    "Média",
     "Difícil"
 ];
 

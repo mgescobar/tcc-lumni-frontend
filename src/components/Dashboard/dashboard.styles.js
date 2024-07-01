@@ -22,19 +22,42 @@ export const Container = styled.div`
 export const ContainerRow = styled.div`
   display: grid;
   grid-template-areas: "column1 column2";
+  grid-template-columns: 1fr 1fr;
+  height: 27vh;
+
+  @media screen and (max-width: 1600px) {
+  grid-template-columns: 80vh 1fr;
+  }
+
+  @media screen and (max-width: 1600px), screen and (max-height: 900px) {
+    height: 35vh;
+  }
+
+  @media screen and (max-width: 1025px) {
+    grid-template-columns: 55vh 1fr;
+  }
 
   @media screen and (max-width: 860px) {
+    grid-template-columns: 1fr;
     grid-template-areas:
       "column2"
       "column1";
+  }
+
+  @media screen and (max-width: 376px) {
+    grid-template-areas:
+      "column2"
+      "column1";
+    grid-template-rows: 2fr 1fr;
   }
 `;
 
 export const ContainerRowChildrens = styled.div`
   @media screen and (max-width: 860px) {
-    grid-template-areas:
-      "column2"
-      "column1";
+    margin-top: 23vh;
+  }
+  @media screen and (max-width: 376px) {
+    margin-top: 38vh;
   }
 `;
 
@@ -43,27 +66,84 @@ export const Column1 = styled.div`
   grid-area: column1;
   border-right: 1px solid #e0e0e0;
   grid-template-areas:
-    "filters"
     "piechart";
-  padding: 10px;  // Added padding for better spacing
+  height: 27vh;
+
+  @media screen and (max-width: 1600px), screen and (max-height: 900px) {
+    height: 35vh;
+  }
+
+  @media screen and (max-width: 860px) {
+    height: 50vh;
+    border-right: none;
+  }
+
+  @media screen and (max-width: 376px) {
+    border-right: none;
+    margin-top: 15vh;
+    border-top: 1px solid #e0e0e0;
+  }
 `;
 
 export const Column2 = styled.div`
   display: grid;
   grid-area: column2;
+  grid-template-columns: 1fr 1fr;
   grid-template-areas:
-    "gamegraph"
-    "chart2";
+    "gamegraph info";
+
+  @media screen and (max-width: 1369px) {
+    grid-template-areas:
+      "gamegraph"
+      "info";
+    grid-template-columns: 1fr;
+  }
+
+  @media screen and (max-width: 1025px) {
+    grid-template-rows: 1fr 1fr;
+  }
+
+  @media screen and (max-width: 860px) {
+    height: 27vh;
+    grid-template-areas:
+      "gamegraph info";
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  @media screen and (max-width: 550px) {
+    grid-template-columns: 1fr 0.5fr;
+  }
+
+  @media screen and (max-width: 376px) {
+    grid-template-areas:
+      "gamegraph"
+      "info";
+    grid-template-columns: 1fr;
+    border-bottom: none;
+  }
 `;
 
 export const GameGraph = styled.div`
   display: grid;
   grid-area: gamegraph;
-  align-items: left;
-  justify-items: left;
-  height: 190px;
+  height: 25vh;
+  width: 100%;
+
+  @media screen and (max-width: 1369px) {
+    height: 20vh;
+  }
+  
+  @media screen and (max-width: 1025px) {
+    height: 21vh;
+  }
+
   @media screen and (max-width: 860px) {
-    height: 150px;
+    height: 30vh;
+  }
+  
+  @media screen and (max-width: 376px) {
+    height: 24vh;
   }
 `;
 
@@ -72,6 +152,7 @@ export const Chart2 = styled.div`
   justify-items: center;
   padding-top: 10px;
   margin-left: 20px;
+  width: 100%;
   @media screen and (max-width: 860px) {
     height: 80px;
     border-bottom: 1px solid #e0e0e0;
@@ -97,29 +178,23 @@ export const UserFilter = styled.div`
   grid-area: userfilter;
 `;
 
-export const InsideColumnChart = styled.div`
+export const GeneralGraph = styled.div`
   display: grid;
   grid-area: piechart;
   grid-template-areas:
-    "filter filter"
-    "chart info";
-  align-items: center;  // Center align the content
-  justify-items: center;  // Center align the content
+    "chart";
 `;
 
 export const Info = styled.div`
-  display: grid;
+  display: inline-block;
   grid-area: info;
-  width: 100%;  // Adjusted to take full width
   padding: 10px;
-  text-align: center;  // Center align the text
 `;
 
 export const Chart = styled.div`
   display: grid;
   grid-area: chart;
-  justify-content: center;  // Center align the chart
-  width: 100%;  // Adjusted to take full width
+  justify-content: center;
 `;
 
 export const Date = styled.div`

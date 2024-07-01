@@ -18,7 +18,7 @@ import {
 import Typography from "@mui/material/Typography";
 const options = [
     "Fácil",
-    "Intermediário",
+    "Média",
     "Difícil"
 ];
 

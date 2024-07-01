@@ -115,7 +115,7 @@ function QuizData() {
         },
         {
             level: 2,
-            nivel: "Intermediário",
+            nivel: "Média",
             score: 35
         },
         {
@@ -495,7 +495,7 @@ function QuizData() {
                                 questions[perguntaAtual].pergunta.level === 1 ?
                                     <span style={{fontSize: "30px", fontWeight: "bold", color: "green", textAlign: "center"}}> Fácil</span>
                                 : questions[perguntaAtual].pergunta.level === 2 ? 
-                                    <span style={{fontSize: "30px", fontWeight: "bold", color: "orange", textAlign: "center"}}>Intermediário</span>
+                                    <span style={{fontSize: "30px", fontWeight: "bold", color: "orange", textAlign: "center"}}>Média</span>
                                 : <span style={{fontSize: "30px", fontWeight: "bold", color: "red", textAlign: "center"}}>Difícil</span>
                             }
                         </ContagemPerguntas>

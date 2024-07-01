@@ -8,14 +8,8 @@ import {
   Title,
   TitleChart,
   Info,
-  Chart,
-  InsideColumnChart,
-  InsideColumnFilter,
   InsideRowChart,
-  LevelFilter,
-  UserFilter,
   GameGraph,
-  Chart2,
   TitleFilters
 } from "./dashboard.styles";
 import makeStyles from "@mui/styles/makeStyles";
@@ -47,11 +41,7 @@ import api from "../../services/api";
 import rank1 from "../../utils/rank1.gif";
 import rank2 from "../../utils/rank2.gif";
 import rank3 from "../../utils/rank3.gif";
-
-const generalData = [
-  { name: "Scrum", value: 400, correct: 100, incorrect: 300, fill: '#0088FE' },
-  { name: "XP", value: 500, correct: 250, incorrect: 250, fill: '#00C49F' },
-];
+import { act } from "react";
 
 const data4 = [
   { value: 20, fill: "#f94144", name: "Ruim" },
@@ -67,9 +57,9 @@ const renderNeedle = (value, data) => {
 
   const angle = 180 + (needleValue / total) * 180;
   const radians = (angle * Math.PI) / 180;
-  const cx = 200;
+  const cx = 140;
   const cy = 133;
-  const length = 120;
+  const length = 85;
 
   const x = cx + length * Math.cos(radians);
   const y = cy + length * Math.sin(radians);
@@ -89,27 +79,6 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
       {`${(percent * 100).toFixed(0)}%`}
     </text>
   );
-};
-
-function LinearProgressWithLabel(props) {
-  return (
-    <Box display="flex" alignItems="center">
-      <Box width="100%" mr={1}>
-        <LinearProgress variant="determinate" {...props} />
-      </Box>
-      <Box minWidth={35}>
-        <Typography variant="body2" color="textSecondary">{`${Math.round(props.value)}%`}</Typography>
-      </Box>
-    </Box>
-  );
-}
-
-LinearProgressWithLabel.propTypes = {
-  /**
-   * The value of the progress indicator for the determinate and buffer variants.
-   * Value between 0 and 100.
-   */
-  value: PropTypes.number.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -187,7 +156,6 @@ export default function DashboardData() {
 
   // ---------------------------------------------- //
 
-
   const renderActiveShape = (props) => {
     const RADIAN = Math.PI / 180;
     const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, value } = props;
@@ -208,6 +176,35 @@ export default function DashboardData() {
     }
     if (incorrectRate === "NaN") {
       incorrectRate = 0;
+    }
+
+
+    if(window.innerWidth < 620) {
+      return (
+      <g>
+        <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
+          {payload.tema}
+        </text>
+        <Sector
+          cx={cx}
+          cy={cy}
+          innerRadius={innerRadius}
+          outerRadius={outerRadius}
+          startAngle={startAngle}
+          endAngle={endAngle}
+          fill={fill}
+        />
+        <Sector
+          cx={cx}
+          cy={cy}
+          startAngle={startAngle}
+          endAngle={endAngle}
+          innerRadius={outerRadius + 6}
+          outerRadius={outerRadius + 10}
+          fill={fill}
+        />
+      </g>
+      );
     }
   
     return (
@@ -239,7 +236,7 @@ export default function DashboardData() {
           {`Perguntas registradas: ${value}`}
         </text>
         <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#333">
-          {`Respostas: ${payload.respondidas}`}
+          {`Respostas registradas: ${payload.respondidas}`}
         </text>
         <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={36} textAnchor={textAnchor} fill="green">
           {`Acertos: ${payload.corretas} (${correctRate}%)`}
@@ -324,6 +321,34 @@ export default function DashboardData() {
   }, [player, theme, question]);
 
   // ---------------------------------------------- //
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (!active || !payload || payload.length === 0) return null;
+  
+    const { tema, registradas, corretas, incorretas, fill } = payload[0].payload;
+    console.log(fill);
+  
+    const tooltipStyles = {
+      width: '150px',
+      backgroundColor: '#f0f0f0',
+      padding: '10px',
+      borderRadius: '5px',
+      position: 'absolute',
+      left: `70px`,
+      top: `170px`,
+      pointerEvents: 'none',
+      transform: 'translate(-50%, -100%)',
+      boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
+    };
+  
+    return (
+      <div style={tooltipStyles} className="custom-tooltip">
+        <p style={{ color: 'black' }}>{tema}</p>
+        <p style={{ color: 'blue' }}>Respondidas: {registradas}</p>
+        <p style={{ color: 'green' }}>Corretas: {corretas}</p>
+        <p style={{ color: 'red' }}>Incorretas: {incorretas}</p>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -381,62 +406,47 @@ export default function DashboardData() {
         {" "}
         <ContainerRow>
           <Column1>
-            <InsideColumnChart>
-              <Info>
-                {generalData.length >= 1 && (
-                  <div className={classes.progressTextRight}>
-                    <h3 className={classes.h3}>{generalDataGraph.registradas}</h3> {generalDataGraph.registradas === 1 ? "questão registrada" : "questões registradas"}.
-                    <br />
-                    <h3 className={classes.h3}>{generalDataGraph.respondidas}</h3> {generalDataGraph.respondidas === 1 ? "questão respondida" : "questões respondidas"}.
-                    <br />
-                    <h3 className={classes.h3}>{generalDataGraph.corretas}</h3> {generalDataGraph.corretas === 1 ? "acerto" : "acertos"}.
-                    <br />
-                    <h3 className={classes.h3}>{generalDataGraph.incorretas}</h3> {generalDataGraph.incorretas === 1 ? "erro" : "erros"}.
-                  </div>
-                )}
-              </Info>
-                <ResponsiveContainer width="60%" height="100%">
-                  <PieChart width={700} height={700}>
-                    <Pie
-                      activeIndex={activeIndex}
-                      activeShape={renderActiveShape}
-                      data={generalDataGraph}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="registradas"
-                      onMouseEnter={(event, index) => setActiveIndex(index)}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-            </InsideColumnChart>
+              <ResponsiveContainer>
+                <PieChart>
+                  <Pie
+                    activeIndex={activeIndex}
+                    activeShape={renderActiveShape}
+                    data={generalDataGraph}
+                    innerRadius={60}
+                    outerRadius={80}
+                    cy={100}
+                    fill="#8884d8"
+                    dataKey="registradas"
+                    onMouseEnter={(event, index) => setActiveIndex(index)}
+                  />
+                {window.innerWidth <= 620 ? <Tooltip content={<CustomTooltip />} /> : null}
+                </PieChart>
+              </ResponsiveContainer>
           </Column1>
-            <Column2>
-              <GameGraph>
-                <ResponsiveContainer width="50%" height="100%" style={{ marginLeft: "auto", marginRight: "auto" }}>
-                  <PieChart>
-                    <Pie data={data4} startAngle={180} endAngle={0} innerRadius="50%" outerRadius="95%" dataKey="value" cx={200} cy={130}>
-                      {data4.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.fill} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    {renderNeedle(gamePerformance.desempenho, data4)}
-                    <text x={200} y={150} textAnchor="middle" dominantBaseline="middle" className="label" fontSize="24px" fontWeight="bold">
-                      {gamePerformance.desempenho}%
-                    </text>
-                    <text x={200} y={175} textAnchor="middle" dominantBaseline="middle" className="label" fontSize="16px">
-                      Desempenho no jogo
-                    </text>
-                  </PieChart>
-                </ResponsiveContainer>
-              </GameGraph>
-              <Chart2>
+          <Column2>
+            <GameGraph>
+              <ResponsiveContainer width="100%" height="100%" style={{ marginLeft: "auto", marginRight: "auto" }}>
+                <PieChart>
+                  <Pie data={data4} startAngle={180} endAngle={0} innerRadius="50%" outerRadius="100%" dataKey="value" cx={130} cy={130}>
+                    {data4.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  {renderNeedle(gamePerformance.desempenho, data4)}
+                  <text x={140} y={150} textAnchor="middle" dominantBaseline="middle" className="label" fontSize="24px" fontWeight="bold">
+                    {gamePerformance.desempenho}%
+                  </text>
+                  <text x={140} y={175} textAnchor="middle" dominantBaseline="middle" className="label" fontSize="16px">
+                    Desempenho no jogo
+                  </text>
+                </PieChart>
+              </ResponsiveContainer>
+            </GameGraph>
+            <Info>
               {player && player.id !== 0 ?  
                 <>
-                  Sua posição no ranking é <strong>{
+                  Sua posição no ranking é {
                     gamePerformance.posicao_placar === 1 ?
                     <img
                         src={rank1}
@@ -455,18 +465,26 @@ export default function DashboardData() {
                             alt="3"
                             style={{ margin : "0 5px", width: "20px" }}
                         /> 
-                    : gamePerformance.posicao_placar
-                  }</strong>
+                    : <strong>gamePerformance.posicao_placar</strong>
+                  }
                 </> 
               : null}	
               <br />
               <br />
-              {!player || player.id === 0 ? "O nível médio da turma é" : "Seu nível de jogador é"} <strong>{gamePerformance.level}</strong>
-                <br />
-                <br />
-                {!player || player.id === 0 ? "O rank médio da turma é" : "Seu rank é" } <strong>{gamePerformance.rank}</strong>
-              </Chart2>
-            </Column2>
+              {!player || player.id === 0 ? 
+                <span>O nível médio da turma é <strong>{gamePerformance.level}</strong></span>
+              : 
+              <span>Seu nível de jogador é <strong>{gamePerformance.level}</strong></span>
+              }
+              <br />
+              <br />
+              {!player || player.id === 0 ? 
+                <span>O rank médio da turma é <strong>{gamePerformance.rank}</strong></span>
+              : 
+              <span>Seu rank é <strong>{gamePerformance.rank}</strong></span>
+              }
+            </Info>
+          </Column2>
         </ContainerRow>
 
         <ContainerRowChildrens>
