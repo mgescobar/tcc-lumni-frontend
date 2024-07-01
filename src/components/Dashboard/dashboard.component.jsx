@@ -179,7 +179,33 @@ export default function DashboardData() {
     }
 
 
-  
+    if(window.innerWidth < 620) {
+      return (
+      <g>
+        <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
+          {payload.tema}
+        </text>
+        <Sector
+          cx={cx}
+          cy={cy}
+          innerRadius={innerRadius}
+          outerRadius={outerRadius}
+          startAngle={startAngle}
+          endAngle={endAngle}
+          fill={fill}
+        />
+        <Sector
+          cx={cx}
+          cy={cy}
+          startAngle={startAngle}
+          endAngle={endAngle}
+          innerRadius={outerRadius + 6}
+          outerRadius={outerRadius + 10}
+          fill={fill}
+        />
+      </g>
+      );
+    }
   
     return (
       <g>
@@ -300,13 +326,13 @@ export default function DashboardData() {
     const { tema, registradas, respondidas, corretas, incorretas, fill } = payload[0].payload;
   
     const tooltipStyles = {
-      width: '150px',
+      width: '135px',
       backgroundColor: '#f0f0f0',
       padding: '5px',
       borderRadius: '5px',
       position: 'absolute',
-      left: `70px`,
-      top: `170px`,
+      left: `65px`,
+      top: `160px`,
       pointerEvents: 'none',
       transform: 'translate(-50%, -100%)',
       boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
@@ -387,11 +413,12 @@ export default function DashboardData() {
                     data={generalDataGraph}
                     innerRadius={60}
                     outerRadius={80}
-                    cy={120}
+                    cy={100}
                     fill="#8884d8"
                     dataKey="registradas"
                     onMouseEnter={(event, index) => setActiveIndex(index)}
                   />
+                {window.innerWidth <= 620 ? <Tooltip content={<CustomTooltip />} /> : null}
                 </PieChart>
               </ResponsiveContainer>
           </Column1>
