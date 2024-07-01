@@ -247,7 +247,6 @@ export default function DashboardData() {
       </g>
     );
   };
-
   
   // filtros jogadores
   useEffect(() => {
@@ -414,7 +413,7 @@ export default function DashboardData() {
                     data={generalDataGraph}
                     innerRadius={60}
                     outerRadius={80}
-                    cy={100}
+                    cy={120}
                     fill="#8884d8"
                     dataKey="registradas"
                     onMouseEnter={(event, index) => setActiveIndex(index)}

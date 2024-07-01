@@ -23,7 +23,6 @@ export const ContainerRow = styled.div`
   display: grid;
   grid-template-areas: "column1 column2";
   grid-template-columns: 1fr 1fr;
-  height: 27vh;
 
   @media screen and (max-width: 1600px) {
   grid-template-columns: 80vh 1fr;
@@ -54,7 +53,7 @@ export const ContainerRow = styled.div`
 
 export const ContainerRowChildrens = styled.div`
   @media screen and (max-width: 860px) {
-    margin-top: 23vh;
+    margin-top: 26vh;
   }
   @media screen and (max-width: 376px) {
     margin-top: 38vh;
@@ -67,7 +66,7 @@ export const Column1 = styled.div`
   border-right: 1px solid #e0e0e0;
   grid-template-areas:
     "piechart";
-  height: 27vh;
+  height: 31vh;
 
   @media screen and (max-width: 1600px), screen and (max-height: 900px) {
     height: 35vh;
