@@ -324,7 +324,7 @@ export default function DashboardData() {
   const CustomTooltip = ({ active, payload, label }) => {
     if (!active || !payload || payload.length === 0) return null;
   
-    const { tema, registradas, corretas, incorretas, fill } = payload[0].payload;
+    const { tema, registradas, respondidas, corretas, incorretas, fill } = payload[0].payload;
     console.log(fill);
   
     const tooltipStyles = {
@@ -343,7 +343,8 @@ export default function DashboardData() {
     return (
       <div style={tooltipStyles} className="custom-tooltip">
         <p style={{ color: 'black' }}>{tema}</p>
-        <p style={{ color: 'blue' }}>Respondidas: {registradas}</p>
+        <p style={{ color: 'blue' }}>Registradas: {registradas}</p>
+        <p style={{ color: 'blue' }}>Respondidas: {respondidas}</p>
         <p style={{ color: 'green' }}>Corretas: {corretas}</p>
         <p style={{ color: 'red' }}>Incorretas: {incorretas}</p>
       </div>
