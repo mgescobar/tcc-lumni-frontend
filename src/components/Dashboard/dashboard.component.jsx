@@ -115,7 +115,7 @@ export default function DashboardData() {
   const classes = useStyles();
   const [activeIndex, setActiveIndex] = useState(0);
   
-  const user = JSON.parse(localStorage.getItem("user"));
+  const [ user, setUser ] = useState(JSON.parse(localStorage.getItem("user")));
   const userPlayer = JSON.parse(localStorage.getItem("player"));
   const defaultPlayerOptions = [{ id: userPlayer?.id, name: user.name, user_id: userPlayer?.user_id }];
 
@@ -157,10 +157,8 @@ export default function DashboardData() {
     let correctRate = ((payload.corretas / payload.respondidas) * 100).toFixed(2);
     let incorrectRate = ((payload.incorretas / payload.respondidas) * 100).toFixed(2);
 
-    if (correctRate === "NaN") {
+    if (isNaN(correctRate) || isNaN(incorrectRate)) {
       correctRate = 0;
-    }
-    if (incorrectRate === "NaN") {
       incorrectRate = 0;
     }
 
@@ -236,6 +234,7 @@ export default function DashboardData() {
   
   // filtros jogadores
   useEffect(() => {
+    if(!user || user === undefined) return;
     async function allPlayers() {
       const { data } = await api.get("/findAllPlayers")
       data.players.unshift({ id: 0, user_id: 0, name: "Todos" });
@@ -253,6 +252,7 @@ export default function DashboardData() {
   
   // filtros perguntas
   useEffect(() => {
+    if(!theme || !player || theme === undefined || player === undefined) return;
     async function data() {
       const { data } = await api.post("/findAllProblemsWithFilters", {
         theme: theme ? theme.value : null,
@@ -266,6 +266,7 @@ export default function DashboardData() {
   }, [theme, player]);
   
   useEffect(() => {
+    if(!player || player === undefined) return;
     async function getGamePerformanceForGraph() {
       const { data } = await api.post("/gamePerformance", {
         player_id: player ? player.id : null,
@@ -284,6 +285,7 @@ export default function DashboardData() {
   }, [player]);
 
   useEffect(() => {
+    if(!player || !theme || !question || player === undefined || theme === undefined || question === undefined) return;
     async function getGeneralDataForGraph() {
       const { data } = await api.post("/generalStats", {
         player_id: player ? player.id : 0,
@@ -450,7 +452,7 @@ export default function DashboardData() {
                             alt="3"
                             style={{ margin : "0 5px", width: "20px" }}
                         /> 
-                    : <strong>gamePerformance.posicao_placar</strong>
+                    : <strong>{gamePerformance.posicao_placar}</strong>
                   }
                 </> 
               : null}	
