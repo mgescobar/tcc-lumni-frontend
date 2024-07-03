@@ -268,8 +268,7 @@ function QuizData() {
     function proximaPergunta(correta, pergunta) {
         const nextQuestion = perguntaAtual + 1;
         var response;
-
-        if (correta) {
+        if (correta === 1) {
             setPontos(pontos + scoreTable[pergunta.pergunta.level-1].score);
             setAcertou(true);
             try {
@@ -280,6 +279,8 @@ function QuizData() {
             catch (err) {
                 console.log(err);
             }
+        } else {
+            setAcertou(false);
         }
         if (nextQuestion < questions.length) {
             setPerguntaAtual(nextQuestion);
@@ -327,19 +328,19 @@ function QuizData() {
             >
                 <Button
                     variant="contained"
-                    color="primary"
-                    onClick={() => navigate("/")}
-                    style={{ width: "15%" }}
-                >
-                    Sim
-                </Button>
-                <Button
-                    variant="contained"
                     color="error"
                     onClick={handleCloseEndQuiz}
                     style={{ width: "15%" }}
                 >
                     Não
+                </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => navigate("/dashboard")}
+                    style={{ width: "15%" }}
+                >
+                    Sim
                 </Button>
             </div>
         </div>
@@ -378,19 +379,19 @@ function QuizData() {
             >
                 <Button
                     variant="contained"
-                    color="primary"
-                    onClick={() => handleBringNextQuestion()}
-                    style={{ width: "15%" }}
-                >
-                    Sim
-                </Button>
-                <Button
-                    variant="contained"
                     color="error"
                     onClick={handleCloseBringNextQuestion}
                     style={{ width: "15%" }}
                 >
                     Não
+                </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleBringNextQuestion()}
+                    style={{ width: "15%" }}
+                >
+                    Sim
                 </Button>
             </div>
         </div>
@@ -402,7 +403,7 @@ function QuizData() {
 
     return questions[0] ? (
         <Container>
-            {showPontuacao && !noQuestions ? (
+            {showPontuacao && noQuestions === false ? (
                 <Pontuação>
                     {acertou ? 
                         <>
@@ -448,7 +449,7 @@ function QuizData() {
                                 <br></br><br></br>
                                 <span style={{ fontWeight: "bold" }}>Alternativa correta:</span> {correctOption(questions[perguntaAtual])}
                                 <br></br><br></br>
-                                <span style={{ fontWeight: "bold" }}>Alternativa escolhida:</span> {ArmazenaRespondida[0].resposta.resposta}
+                                <span style={{ fontWeight: "bold" }}>Alternativa escolhida:</span> {ArmazenaRespondida[ArmazenaRespondida.length-1].resposta.resposta}
                                 <br></br><br></br>
                                 <span style={{ fontWeight: "bold" }}>Você demorou {
                                 ArmazenaRespondida[0].tempo >= 60 ? 
@@ -570,7 +571,7 @@ function QuizData() {
             )}
         </Container>
     ) : (
-        {noQuestions} ? (
+        noQuestions === true ? (
             <Container>
                 <Pontuação>
                     <span>
