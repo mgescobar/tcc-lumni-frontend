@@ -9,17 +9,17 @@ export const Container = styled.div`
   border: 1px solid rgba(209, 213, 219, 0);
   box-shadow: 4px 2px 50px rgba(0, 0, 0, 0.2);
   max-width: 70%;
-  height: 450px;
+  height: 87vh;
 
   @media screen and (max-width: 800px) {
-    margin: 50px auto;
-    max-width: 95%;
+    margin: 2vh auto;
+    max-width: 90%;
     overflow-x: scroll;
-    height: 65vh;
+    height: 87vh;
   }
 
   @media screen and (max-width: 375px) {
-    max-width: 95%;
+    max-width: 85%;
   }
 `;
 

@@ -265,13 +265,7 @@ export default function HighscoreData() {
                 <TableFooter>
                     <TableRow>
                         <TablePagination
-                            rowsPerPageOptions={[
-                                5,
-                                10,
-                                25,
-                                { label: "Todos", value: -1 },
-                            ]}
-                            colSpan={5}
+                            colSpan={10}
                             count={rows.length}
                             rowsPerPage={rowsPerPage}
                             labelRowsPerPage="Linhas por página:"

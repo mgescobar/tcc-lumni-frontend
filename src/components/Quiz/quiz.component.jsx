@@ -36,9 +36,12 @@ const useStyles = makeStyles((theme) => ({
         padding: "2rem",
         fontFamily: "Roboto",
         textAlign: "center",
-        "@media (max-width: 680px)": {
-            marginTop: "80%",
+        "@media (max-width: 860px)": {
+            marginTop: "40vh",
             transform: "translate(-50%, -50%) scale(0.7)",
+        },
+        "@media (max-width: 550px)": {
+            width: 400,
         },
     },
     paperModal2: {
@@ -57,9 +60,12 @@ const useStyles = makeStyles((theme) => ({
         padding: "2rem",
         fontFamily: "Roboto",
         textAlign: "center",
-        "@media (max-width: 680px)": {
-            marginTop: "80%",
+        "@media (max-width: 860px)": {
+            marginTop: "40vh",
             transform: "translate(-50%, -50%) scale(0.7)",
+        },
+        "@media (max-width: 550px)": {
+            width: 400,
         },
     },
     buttonModal: {
@@ -547,6 +553,7 @@ function QuizData() {
                             onClick={() => 
                                 setOpenBringNextQuestion(true)
                             }
+                            style={{ marginLeft: "10px" }}
                         >
                             Pular pergunta
                         </Button>

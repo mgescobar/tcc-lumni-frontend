@@ -14,6 +14,7 @@ import {
     Text,
     ContainerRow,
     ButtonCont,
+    PontosInfo
 } from "./filterQuiz.styles";
 import Typography from "@mui/material/Typography";
 const options = [
@@ -97,6 +98,64 @@ function FilterQuizData(name, setName, fetchQuestions) {
                             Começar Quiz
                         </Button>
                     </ButtonCont>
+                    <PontosInfo>
+                        <Typography
+                            component="a"
+                            sx={{
+                                fontFamily: "monospace",
+                                fontSize: 23,
+                                fontWeight: 700,
+                                justifyContent: "center",
+                                color: "#01263f",
+                                textDecoration: "none",
+                            }}
+                        >
+                            Pontos por dificuldade:
+                        </Typography>
+                        <Typography
+                            noWrap
+                            component="a"
+                            sx={{
+                                fontFamily: "monospace",
+                                fontSize: 18,
+                                fontWeight: 700,
+                                justifyContent: "center",
+                                color: "green",
+                                textDecoration: "none",
+                            }}
+                        >
+                            Fácil - 10 pontos
+                        </Typography>
+                        <Typography
+                            noWrap
+                            component="a"
+                            sx={{
+                                fontFamily: "monospace",
+                                fontSize: 18,
+                                fontWeight: 700,
+                                justifyContent: "center",
+                                color: "orange",
+                                textDecoration: "none",
+                            }}
+                        >
+                            Média - 35 pontos
+                        </Typography>
+                        <Typography
+                            noWrap
+                            component="a"
+                            sx={{
+                                fontFamily: "monospace",
+                                fontSize: 18,
+                                fontWeight: 700,
+                                justifyContent: "center",
+                                color: "red",
+                                textDecoration: "none",
+                            }}
+                        >
+                            Difícil - 75 pontos
+                        </Typography>
+                    </PontosInfo>
+
                 </ContainerRow>
             </Container>{" "}
         </>

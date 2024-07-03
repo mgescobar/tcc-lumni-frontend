@@ -63,6 +63,11 @@ const renderNeedle = (value, data) => {
 
   const x = cx + length * Math.cos(radians);
   const y = cy + length * Math.sin(radians);
+
+  if(isNaN(x) || isNaN(y)) {
+    return <line x1={cx} y1={cy} x2={0} y2={0} stroke="black" strokeWidth="3" />
+  }
+
   return <line x1={cx} y1={cy} x2={x} y2={y} stroke="black" strokeWidth="3" />;
 };
 

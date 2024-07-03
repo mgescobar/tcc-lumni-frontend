@@ -9,18 +9,30 @@ export const Container = styled.div`
     border-radius: 20px;
     border: 1px solid rgba(209, 213, 219, 0);
     box-shadow: 4px 2px 50px rgba(0, 0, 0, 0.2);
-    max-width: 30%;
-    height: 450px;
-
+    max-width: 40%;
+    height: 50vh;
+        
     @media screen and (max-width: 1240px) {
+        height: 55vh;
         margin: 100px auto;
-        max-width: 50%;
+        max-width: 45%;
     }
+
     @media screen and (max-width: 750px) {
+        max-width: 60%;
+    }
+
+    @media screen and (max-width: 570px) {
         max-width: 70%;
     }
+
+    @media screen and (max-width: 500px) {
+        max-width: 75%;
+    }
+
     @media screen and (max-width: 480px) {
-        max-width: 90%;
+        max-width: 80%;
+        height: 63vh;
     }
 `;
 
@@ -55,4 +67,12 @@ export const ButtonCont = styled.div`
     width: 50%;
 
     margin: 20px auto;
+`;
+
+export const PontosInfo = styled.div`
+    display: grid;
+    grid-area: repeat(2, 1fr);
+    font-family: "monospace";
+    justify-content: "center";
+    text-align: center;
 `;
