@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   ContainerRow,
@@ -13,10 +13,6 @@ import {
   TitleFilters
 } from "./dashboard.styles";
 import makeStyles from "@mui/styles/makeStyles";
-import LinearProgress from "@mui/material/LinearProgress";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import PropTypes from "prop-types";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import {
@@ -36,12 +32,10 @@ import {
   Sector
 } from "recharts";
 import api from "../../services/api";
-
 // import rank icons from public folder
 import rank1 from "../../utils/rank1.gif";
 import rank2 from "../../utils/rank2.gif";
 import rank3 from "../../utils/rank3.gif";
-import { act } from "react";
 
 const data4 = [
   { value: 20, fill: "#f94144", name: "Ruim" },
@@ -69,21 +63,6 @@ const renderNeedle = (value, data) => {
   }
 
   return <line x1={cx} y1={cy} x2={x} y2={y} stroke="black" strokeWidth="3" />;
-};
-
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
-
-const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-  return (
-    <text x={x} y={y} fill="white" textAnchor={x > cx ? "start" : "end"} dominantBaseline="central">
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -145,11 +124,13 @@ export default function DashboardData() {
   const [questionOptions, setQuestionOptions] = useState([]);
   const [question, setQuestion] = useState(null);
 
-  const [themeOptions, setThemeOptions] = useState([
-    { name: "Todos", value: 0 },
-    { name: "Scrum", value: 1 },
-    { name: "Extreme Programming", value: 2 },
-  ]);
+  const themeOptions = (
+    [
+      { name: "Todos", value: 0 },
+      { name: "Scrum", value: 1 },
+      { name: "Extreme Programming", value: 2 },
+    ]
+  );
   const [theme, setTheme] = useState(themeOptions[0]);
 
   // ---------------------------------------------- //
@@ -268,7 +249,7 @@ export default function DashboardData() {
     } else {
       allPlayers();
     }
-  }, []);
+  }, [user]);
   
   // filtros perguntas
   useEffect(() => {
@@ -328,7 +309,7 @@ export default function DashboardData() {
   const CustomTooltip = ({ active, payload, label }) => {
     if (!active || !payload || payload.length === 0) return null;
   
-    const { tema, registradas, respondidas, corretas, incorretas, fill } = payload[0].payload;
+    const { tema, registradas, respondidas, corretas, incorretas } = payload[0].payload;
   
     const tooltipStyles = {
       width: '135px',

@@ -6,8 +6,6 @@ import {
 } from "./highscore.styles";
 
 /* Material UI*/
-import {  red } from "@mui/material/colors";
-import { createTheme } from "@mui/material/styles";
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useTheme } from "@mui/material/styles";
@@ -24,7 +22,6 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import makeStyles from "@mui/styles/makeStyles";
 
 // import rank icons from public folder
 import rank1 from "../../utils/rank1.gif";
@@ -33,23 +30,6 @@ import rank3 from "../../utils/rank3.gif";
 
 import api from "../../services/api";
 import { TableHead } from "@mui/material";
-
-const theme = createTheme({
-    palette: {
-        secondary: { main: red[600] },
-    },
-});
-
-const useStyles = makeStyles((theme) => ({
-    textControl: {
-        width: "100%",
-        margin: "12px",
-        "@media (max-width: 680px)": {
-            width: "100%",
-            padding: 10,
-        },
-    }
-}));
 
 function TablePaginationActions(props) {
     const theme = useTheme();

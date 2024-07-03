@@ -10,10 +10,10 @@ export const Container = styled.div`
     border: 1px solid rgba(209, 213, 219, 0);
     box-shadow: 4px 2px 50px rgba(0, 0, 0, 0.2);
     max-width: 40%;
-    height: 50vh;
+    height: 450px;
         
     @media screen and (max-width: 1240px) {
-        height: 55vh;
+        height: 490px;
         margin: 100px auto;
         max-width: 45%;
     }
@@ -32,7 +32,7 @@ export const Container = styled.div`
 
     @media screen and (max-width: 480px) {
         max-width: 80%;
-        height: 63vh;
+        height: 530px;
     }
 `;
 

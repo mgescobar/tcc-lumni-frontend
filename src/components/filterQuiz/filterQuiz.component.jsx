@@ -1,9 +1,7 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
-import api from "../../services/api";
 import { CategoriesQuiz } from "../../api/Categories";
-import Autocomplete from "@mui/material/Autocomplete";
 import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";

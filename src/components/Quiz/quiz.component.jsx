@@ -15,7 +15,6 @@ import {
     ButtonAnswer,
     ContagemTempo
 } from "./quiz.styles";
-import { ClassNames } from "@emotion/react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 
@@ -171,7 +170,7 @@ function QuizData() {
                     const player = await api.get(`/findUser/${id}`);
                     var response;
 
-                    if(player.data.player.length == 0){
+                    if(player.data.player.length === 0){
                         response = await api.get(`/randomProblem/${2}`);
                     } else {
                         setplayerID(player.data.player[0].id);
@@ -179,7 +178,7 @@ function QuizData() {
                         response = await api.get(`/randomProblem/${player.data.player[0].id}/`);
                     }
 
-                    if(response.data.message == "Não foram encontrada perguntas com esse tema para esse jogador."){
+                    if(response.data.message === "Não foram encontrada perguntas com esse tema para esse jogador."){
                         setNoQuestions(true);
                         return;
                     }
@@ -194,7 +193,7 @@ function QuizData() {
                                 id: item.problems[index].id,
                             },
                             opcoesResposta: item.options
-                            .filter((item) => item.description != "" && item.description != null && item.description.trim() != "")
+                            .filter((item) => item.description !== "" && item.description !== null && item.description.trim() !== "")
                             .map((item2, index2) => {
                                 return {
                                     id: item2.id,
@@ -208,7 +207,7 @@ function QuizData() {
                     setquestions(newObject);
                 } catch (err) {
                     console.log(err);
-                    if(err.response.data.message == "Não foram encontrada perguntas com esse tema para esse jogador."){
+                    if(err.response.data.message === "Não foram encontrada perguntas com esse tema para esse jogador."){
                         setNoQuestions(true);
                         setquestions([]);
                     }
@@ -220,11 +219,11 @@ function QuizData() {
                 try {
 
                     const id = JSON.parse(localStorage.getItem("user")).id;
-                    const category_name = CategoriesQuiz.find((item) => item.value == Value.category);
+                    const category_name = CategoriesQuiz.find((item) => item.value === Value.category);
                     const player = await api.get(`/findUser/${id}`);
                     var response;
 
-                    if(player.data.player.length == 0){
+                    if(player.data.player.length === 0){
                         response = await api.get(`/randomProblem/${2}`);
                     } else {
                         setplayerID(player.data.player[0].id);
@@ -232,7 +231,7 @@ function QuizData() {
                         response = await api.get(`/randomProblemByTheme/${player.data.player[0].id}/theme/${category_name.value}`);
                     }
 
-                    if(response.data.message == "Não foram encontrada perguntas com esse tema para esse jogador."){
+                    if(response.data.message === "Não foram encontrada perguntas com esse tema para esse jogador."){
                         setNoQuestions(true);
                         return;
                     }
@@ -247,7 +246,7 @@ function QuizData() {
                                 id: item.problems[index].id,
                             },
                             opcoesResposta: item.options
-                            .filter((item) => item.description != "" && item.description != null && item.description.trim() != "")
+                            .filter((item) => item.description !== "" && item.description !== null && item.description.trim() !== "")
                             .map((item2, index2) => {
                                 return {
                                     id: item2.id,
@@ -261,7 +260,7 @@ function QuizData() {
                     setquestions(newObject);
                 } catch (err) {
                     console.log(err);
-                    if(err.response.data.message == "Não foram encontrada perguntas com esse tema para esse jogador."){
+                    if(err.response.data.message === "Não foram encontrada perguntas com esse tema para esse jogador."){
                         setNoQuestions(true);
                         setquestions([]);
                     }
@@ -558,24 +557,24 @@ function QuizData() {
                             Pular pergunta
                         </Button>
                     </div>
-                    <Modal
-                        open={openEndQuiz}
-                        onClose={handleCloseEndQuiz}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        {bodyEndQuiz}
-                    </Modal>
-                    <Modal
-                        open={openBringNextQuestion}
-                        onClose={handleCloseBringNextQuestion}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        {bodyNextQuestion}
-                    </Modal>
                 </>
             )}
+            <Modal
+                open={openEndQuiz}
+                onClose={handleCloseEndQuiz}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                {bodyEndQuiz}
+            </Modal>
+            <Modal
+                open={openBringNextQuestion}
+                onClose={handleCloseBringNextQuestion}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                {bodyNextQuestion}
+            </Modal>
         </Container>
     ) : (
         noQuestions === true ? (
