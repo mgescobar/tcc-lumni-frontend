@@ -7,7 +7,6 @@ import {
     ContainerAddModalQuestion,
     Question,
     Level,
-    Answers,
     AddIconModal,
     ContainerTitle,
     ADDQuestion,
@@ -350,7 +349,6 @@ export default function QuestionsData() {
                             correct: questionCorrect === index.toString() ? 1 : 0,
                         })),
                         level: questionLevel + 1,
-                        tips: "teste",
                         theme: category
                         
                     },
@@ -838,11 +836,13 @@ export default function QuestionsData() {
 
                             <TableCell style={{ width: 160 }} align="right">
                                 <EditIcon
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => handleOpenEdit(row.id)}
                                 />
                             </TableCell>
                             <TableCell style={{ width: 160 }} align="center">
                                 <DeleteIcon
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => handleOpenRemove(row.id)}
                                 />
                             </TableCell>
@@ -860,12 +860,9 @@ export default function QuestionsData() {
                     <TableRow>
                         <TablePagination
                             rowsPerPageOptions={[
-                                5,
-                                10,
-                                25,
-                                { label: "Todas", value: -1 },
+                                7,
                             ]}
-                            colSpan={5}
+                            colSpan={7}
                             count={rows.length}
                             rowsPerPage={rowsPerPage}
                             labelRowsPerPage="Perguntas por página:"

@@ -106,6 +106,7 @@ function QuizData() {
     const Value = useLocation().state;
     const navigate = useNavigate();
     const classes = useStyles();
+    const [ loading, setLoading ] = useState(true);
 
     const [openEndQuiz, setOpenEndQuiz] = React.useState(false);
     const [openBringNextQuestion, setOpenBringNextQuestion] = React.useState(false);
@@ -162,6 +163,7 @@ function QuizData() {
     }, [resetaContagem, tempo]);
 
     useEffect(() => {
+        setLoading(true);
         setResetaContagem(true)
         if (Value.category === 3) {
             async function findperguntasRandom() {
@@ -268,6 +270,8 @@ function QuizData() {
             }
             findperguntas();
         }
+
+        setLoading(false);
     }, [bringNextQuestion]);
 
     function proximaPergunta(correta, pergunta) {
@@ -406,7 +410,7 @@ function QuizData() {
         return question.opcoesResposta.filter((item) => item.correta === 1)[0].resposta;
     }
 
-    return questions[0] ? (
+    return questions[0] && !loading ? (
         <Container>
             {showPontuacao && noQuestions === false ? (
                 <Pontuação>
@@ -577,7 +581,7 @@ function QuizData() {
             </Modal>
         </Container>
     ) : (
-        noQuestions === true ? (
+        noQuestions === true && !loading ? (
             <Container>
                 <Pontuação>
                     <span>
