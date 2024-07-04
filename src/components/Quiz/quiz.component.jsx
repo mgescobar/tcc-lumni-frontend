@@ -3,6 +3,8 @@ import api from "../../services/api";
 import Button from "@mui/material/Button";
 import makeStyles from "@mui/styles/makeStyles";
 import { CategoriesQuiz } from "../../api/Categories";
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 /* Styles */
 import {
     Container,
@@ -213,6 +215,8 @@ function QuizData() {
                         setNoQuestions(true);
                         setquestions([]);
                     }
+                } finally {
+                    setTimeout(() => setLoading(false), 1000);
                 }
             }
             findperguntasRandom();
@@ -266,12 +270,12 @@ function QuizData() {
                         setNoQuestions(true);
                         setquestions([]);
                     }
+                } finally {
+                    setTimeout(() => setLoading(false), 1000);
                 }
             }
             findperguntas();
         }
-
-        setLoading(false);
     }, [bringNextQuestion]);
 
     function proximaPergunta(correta, pergunta) {
@@ -603,6 +607,9 @@ function QuizData() {
             <Container>
                 <Pontuação>
                     <span>Carregando...</span>
+                    <Box sx={{ marginTop: '30px', display: 'flex' }}>
+                        <CircularProgress />
+                    </Box>
                 </Pontuação>
             </Container>
         )
