@@ -177,12 +177,14 @@ const ResponsiveAppBar = () => {
                                                     </ListItemButton>
                                                 </NavLink>
                                             : null}
-                                            <NavLink
-                                                className={classes.letterMenu1}
-                                                to="/Filter"
-                                            >
-                                                <ListItemButton>Quiz</ListItemButton>
-                                            </NavLink>
+                                            {playerData && playerData.player.length > 0 ? 
+                                                <NavLink
+                                                    className={classes.letterMenu1}
+                                                    to="/Filter"
+                                                >
+                                                    <ListItemButton>Quiz</ListItemButton>
+                                                </NavLink>
+                                            : null}
                                             <NavLink
                                                 className={classes.letterMenu1}
                                                 to="/Highscore"
@@ -239,16 +241,14 @@ const ResponsiveAppBar = () => {
                                         <ListItemButton>Perguntas</ListItemButton>
                                     </NavLink>
                                     ) : null }
-                                    {/* <NavLink className={classes.letterMenu} to="/Quiz">
-                                        <ListItemButton>Quiz</ListItemButton>
-                                    </NavLink> */}
-                                    <NavLink
-                                        className={classes.letterMenu}
-                                        to="/Filter"
-                                    >
-                                        <ListItemButton>Quiz</ListItemButton>
-                                    </NavLink>
-                                    
+                                    {playerData && playerData.player.length > 0 ? 
+                                        <NavLink
+                                            className={classes.letterMenu1}
+                                            to="/Filter"
+                                        >
+                                            <ListItemButton>Quiz</ListItemButton>
+                                        </NavLink>
+                                    : null}
                                     <NavLink
                                         className={classes.letterMenu}
                                         to="/Highscore"
