@@ -177,14 +177,14 @@ const ResponsiveAppBar = () => {
                                                     </ListItemButton>
                                                 </NavLink>
                                             : null}
-                                            {playerData && playerData.player.length > 0 ? 
+                                            {playerData && playerData.player?.length > 0 ? (
                                                 <NavLink
-                                                    className={classes.letterMenu1}
+                                                    className={classes.letterMenu}
                                                     to="/Filter"
                                                 >
                                                     <ListItemButton>Quiz</ListItemButton>
                                                 </NavLink>
-                                            : null}
+                                            ) : null }
                                             <NavLink
                                                 className={classes.letterMenu1}
                                                 to="/Highscore"
@@ -241,14 +241,14 @@ const ResponsiveAppBar = () => {
                                         <ListItemButton>Perguntas</ListItemButton>
                                     </NavLink>
                                     ) : null }
-                                    {playerData && playerData.player.length > 0 ? 
+                                    {playerData && playerData.player?.length > 0 ? (
                                         <NavLink
-                                            className={classes.letterMenu1}
+                                            className={classes.letterMenu}
                                             to="/Filter"
                                         >
                                             <ListItemButton>Quiz</ListItemButton>
                                         </NavLink>
-                                    : null}
+                                    ) : null }
                                     <NavLink
                                         className={classes.letterMenu}
                                         to="/Highscore"
