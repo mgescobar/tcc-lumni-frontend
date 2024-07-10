@@ -199,25 +199,25 @@ export default function HighscoreData() {
                         <TableRow key={row.id}>
                             <TableCell component="th" scope="row">
                                 {
-                                    index + 1 === 1 ?
+                                    index + (page * rowsPerPage) + 1 === 1 ?
                                         <img
                                             src={rank1}
                                             alt="1"
                                             style={{ width: "20px" }}
                                         />
-                                    : index + 1 === 2 ? 
+                                    : index + (page * rowsPerPage) + 1 === 2 ? 
                                         <img
                                             src={rank2}
                                             alt="2"
                                             style={{ width: "15px" }}
                                         />
-                                    : index + 1 === 3 ?
+                                    : index + (page * rowsPerPage) + 1 === 3 ?
                                         <img
                                             src={rank3}
                                             alt="3"
                                             style={{ width: "15px" }}
                                         /> 
-                                    : index + 1
+                                    : index + (page * rowsPerPage) + 1
                                 }
                             </TableCell>
                             <TableCell component="th" scope="row">
